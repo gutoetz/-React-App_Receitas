@@ -1,50 +1,66 @@
 import React, { useContext } from 'react';
-import MyContext from '../context/MyContext';
+import PropTypes from 'prop-types';
 
-function Login() {
-  const { selectSearchType, handleSearch, handleSearchInput } = useContext(MyContext);
+import GlobalContext from '../context/GlobalContext';
+
+function SearchBar({ pageTitle }) {
+  const {
+    selectSearchType,
+    handleSearchType,
+    handleSearchInput } = useContext(GlobalContext);
+
   return (
-    <div>
-      <input data-testid="search-input" onChange={ handleSearchInput } />
+    <form>
+
+      <input type="text" data-testid="search-input" onChange={ handleSearchInput } />
+
       <label htmlFor="Ingredient">
         Ingredient
         <input
-          id="Ingredient"
           type="radio"
+          value="Ingredient"
           data-testid="ingredient-search-radio"
           name="searchType"
           onClick={ selectSearchType }
         />
       </label>
+
       <label htmlFor="Name">
         Name
         <input
-          id="Name"
           type="radio"
+          value="Name"
           data-testid="name-search-radio"
           name="searchType"
           onClick={ selectSearchType }
         />
       </label>
+
       <label htmlFor="First letter">
         First letter
         <input
-          id="First letter"
           type="radio"
+          value="First Letter"
           data-testid="first-letter-search-radio"
           name="searchType"
           onClick={ selectSearchType }
         />
       </label>
+
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ () => handleSearch }
+        onClick={ () => handleSearchType(pageTitle) }
       >
         Buscar
       </button>
-    </div>
+
+    </form>
   );
 }
 
-export default Login;
+SearchBar.propTypes = {
+  pageTitle: PropTypes.string.isRequired,
+};
+
+export default SearchBar;
