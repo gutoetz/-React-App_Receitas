@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [validInfos, setValidInfos] = useState(false);
+
+  const history = useHistory();
 
   const handleChange = ({ target: { id, value } }) => {
     if (id === 'email') {
@@ -16,6 +19,7 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     localStorage.setItem('user', JSON.stringify({ email }));
+    history.push('/meals');
   };
 
   useEffect(() => {
