@@ -1,15 +1,18 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import GlobalProvider from './context/GlobalProvider';
 
 ReactDOM
   .createRoot(document.getElementById('root'))
   .render(
     <BrowserRouter>
-      <App />
+      <GlobalProvider>
+        <App />
+      </GlobalProvider>
     </BrowserRouter>,
   );
 
