@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 
+import profileIcon from '../images/profileIcon.svg';
+import searchIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 
 export default function Header({ title }) {
@@ -12,22 +14,34 @@ export default function Header({ title }) {
   const history = useHistory();
 
   return (
-    <header style={ { display: 'flex' } }>
+    <header
+      style={ {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '5px',
+      } }
+    >
 
-      <h3 data-testid="page-title">{title}</h3>
+      <h2 data-testid="page-title">{title}</h2>
 
       <img
-        src="src/images/profileIcon.svg"
+        src={ profileIcon }
         alt="profile-top-btn"
         data-testid="profile-top-btn"
         onClick={ () => history.push({ pathname: '/profile' }) }
         aria-hidden="true"
       />
 
-      { !arrayOfTitles.some((pageTitle) => pageTitle === title)
+      <div
+        style={ {
+          display: 'flex',
+        } }
+      >
+        { !arrayOfTitles.some((pageTitle) => pageTitle === title)
        && (
          <img
-           src="src/images/searchIcon.svg"
+           src={ searchIcon }
            alt="search-top-btn"
            data-testid="search-top-btn"
            onClick={ () => setSearching(!searching) }
@@ -35,7 +49,8 @@ export default function Header({ title }) {
          />
        ) }
 
-      { searching && <SearchBar pageTitle={ title } /> }
+        { searching && <SearchBar pageTitle={ title } /> }
+      </div>
 
     </header>
   );

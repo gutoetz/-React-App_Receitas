@@ -15,36 +15,36 @@ function SearchBar({ pageTitle }) {
       <input type="text" data-testid="search-input" onChange={ handleSearchInput } />
 
       <label htmlFor="Ingredient">
-        Ingredient
         <input
           type="radio"
-          value="Ingredient"
+          id="Ingredient"
           data-testid="ingredient-search-radio"
           name="searchType"
           onClick={ selectSearchType }
         />
+        Ingredient
       </label>
 
       <label htmlFor="Name">
-        Name
         <input
           type="radio"
-          value="Name"
+          id="Name"
           data-testid="name-search-radio"
           name="searchType"
           onClick={ selectSearchType }
         />
+        Name
       </label>
 
-      <label htmlFor="First letter">
-        First letter
+      <label htmlFor="First Letter">
         <input
           type="radio"
-          value="First Letter"
+          id="First Letter"
           data-testid="first-letter-search-radio"
           name="searchType"
           onClick={ selectSearchType }
         />
+        First Letter
       </label>
 
       <button
@@ -52,7 +52,7 @@ function SearchBar({ pageTitle }) {
         data-testid="exec-search-btn"
         onClick={ () => handleSearchType(pageTitle) }
       >
-        Buscar
+        Search
       </button>
 
     </form>

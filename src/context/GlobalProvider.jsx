@@ -9,8 +9,8 @@ function GlobalProvider({ children }) {
   const [revenues, setRevenues] = useState([]);
 
   // functions
-  const selectSearchType = useCallback(({ target: { value } }) => {
-    setSearchType(value);
+  const selectSearchType = useCallback(({ target: { id } }) => {
+    setSearchType(id);
   }, []);
 
   const handleSearchInput = useCallback(({ target: { value } }) => {
