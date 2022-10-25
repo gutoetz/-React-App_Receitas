@@ -26,27 +26,25 @@ function GlobalProvider({ children }) {
     const path = pageTitle === 'Drinks' ? 'idDrink' : 'idMeal';
     const data = dataJson[pageTitle.toLowerCase()];
     if (data === null) {
-      global.alert('Sorry, we haven\'t found any recipes for these filters.');
-    } else if (data.length === 1) {
-      history.push(`/${pageTitle.toLowerCase()}/${data[0][path]}`);
-    } else if (data.length > 1) setRevenues(data.splice(0, MAX_RENDER));
+      return global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    }
+    if (data.length === 1) {
+      console.log(history);
+      return history.push(`/${pageTitle.toLowerCase()}/${data[0][path]}`);
+    }
+    setRevenues(data.splice(0, MAX_RENDER));
   }, [history]);
 
   const handleSearchType = useCallback(async (pageTitle) => {
     const letter = searchType === 'Name' ? 's' : 'f';
+    const paramEndPoint = pageTitle === 'Drinks' ? 'thecocktaildb' : 'themealdb';
     if (searchType === 'Ingredient') {
-      const response = ((pageTitle === 'Drinks')
-        ? await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchInput}`)
-        : await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`))
-        || [];
+      const response = await fetch(`https://www.${paramEndPoint}.com/api/json/v1/1/filter.php?i=${searchInput}`);
       const dataJson = await response.json();
       settingRevenues(dataJson, pageTitle);
     }
     if (searchType === 'Name' || searchType === 'First Letter') {
-      const response = ((pageTitle === 'Drinks')
-        ? await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?${letter}=${searchInput}`)
-        : await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?${letter}=${searchInput}`))
-        || [];
+      const response = await fetch(`https://www.${paramEndPoint}.com/api/json/v1/1/search.php?${letter}=${searchInput}`);
       const dataJson = await response.json();
       settingRevenues(dataJson, pageTitle);
     }

@@ -57,7 +57,7 @@ describe('Tela de login', () => {
   });
 
   test('Testa se é redirecionado ao submeter o formulário', async () => {
-    renderWithRouter(<App />, '/');
+    const { history } = renderWithRouter(<App />, '/');
     const emailInput = screen.getByTestId(EMAIL_INPUT);
     const passwordInput = screen.getByTestId(PASS_INPUT);
     const submitBtn = screen.getByTestId(BUTTON_SUBMIT);
@@ -71,6 +71,6 @@ describe('Tela de login', () => {
     });
     expect(meals).toBeInTheDocument();
 
-    expect(window.location.pathname).toBe('/meals');
+    expect(history.location.pathname).toBe('/meals');
   });
 });

@@ -9,7 +9,7 @@ export default function Meals() {
     <div>
       <Header title="Meals" />
       <div>
-        {revenues ? (
+        {revenues && (
           revenues.map((revenue, index) => (
             <RevenueCard
               cardInfo={ revenue }
@@ -19,7 +19,7 @@ export default function Meals() {
               key={ index }
             />
           ))
-        ) : (null)}
+        )}
       </div>
     </div>
   );

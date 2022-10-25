@@ -9,11 +9,11 @@ const renderWithRouter = (component, route = '/') => {
 
   return {
     ...render(
-      <GlobalProvider>
-        <Router history={ history }>
+      <Router history={ history }>
+        <GlobalProvider>
           {component}
-        </Router>
-      </GlobalProvider>,
+        </GlobalProvider>
+      </Router>,
     ),
     history,
   };
