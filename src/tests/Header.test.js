@@ -13,6 +13,14 @@ const searchTopBtnTestid = 'search-top-btn';
 const profileTopBtnTestid = 'profile-top-btn';
 const pageTitleTestid = 'page-title';
 
+const contextValue = {
+  searchType: 'lasanha',
+  revenues: 'vegana',
+  selectSearchType: jest.fn(),
+  handleSearchType: jest.fn(),
+  handleSearchInput: jest.fn(),
+};
+
 describe('Componente "<Header />"', () => {
   test('Rota "/meals": possui o header com o título "Meals" e os ícones de perfil e pesquisa', () => {
     renderWithRouter(<Meals />, '/meals');
@@ -79,7 +87,7 @@ describe('Componente "<Header />"', () => {
   */
 
   test('Ao clicar no botão de busca, a barra de busca deve aparecer. O mesmo serve para escondê-la.', () => {
-    renderWithRouter(<Drinks />, '/drinks');
+    renderWithRouter(<Drinks />, '/drinks', contextValue);
     const searchTopBtn = screen.getByTestId(searchTopBtnTestid);
 
     userEvent.click(searchTopBtn);
