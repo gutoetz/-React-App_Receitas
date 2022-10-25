@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState, useMemo, useCallback } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import GlobalContext from './GlobalContext';
 
 function GlobalProvider({ children }) {
@@ -25,7 +25,6 @@ function GlobalProvider({ children }) {
     const MAX_RENDER = 12;
     const path = pageTitle === 'Drinks' ? 'idDrink' : 'idMeal';
     const data = dataJson[pageTitle.toLowerCase()];
-    console.log(data);
     if (data === null) {
       global.alert('Sorry, we haven\'t found any recipes for these filters.');
     } else if (data.length === 1) {
@@ -36,16 +35,18 @@ function GlobalProvider({ children }) {
   const handleSearchType = useCallback(async (pageTitle) => {
     const letter = searchType === 'Name' ? 's' : 'f';
     if (searchType === 'Ingredient') {
-      const response = (pageTitle === 'Drinks')
+      const response = ((pageTitle === 'Drinks')
         ? await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchInput}`)
-        : await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`);
+        : await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`))
+        || [];
       const dataJson = await response.json();
       settingRevenues(dataJson, pageTitle);
     }
     if (searchType === 'Name' || searchType === 'First Letter') {
-      const response = (pageTitle === 'Drinks')
+      const response = ((pageTitle === 'Drinks')
         ? await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?${letter}=${searchInput}`)
-        : await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?${letter}=${searchInput}`);
+        : await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?${letter}=${searchInput}`))
+        || [];
       const dataJson = await response.json();
       settingRevenues(dataJson, pageTitle);
     }

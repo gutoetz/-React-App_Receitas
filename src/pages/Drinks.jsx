@@ -5,6 +5,7 @@ import GlobalContext from '../context/GlobalContext';
 
 export default function Drinks() {
   const { revenues } = useContext(GlobalContext);
+
   return (
     <div>
       <Header title="Drinks" />

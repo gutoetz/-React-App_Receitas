@@ -56,17 +56,21 @@ describe('Tela de login', () => {
     expect(submitBtn).not.toHaveAttribute('disabled');
   });
 
-  test('Testa se é redirecionado ao submeter o formulário', () => {
-    const { history } = renderWithRouter(<App />);
+  test('Testa se é redirecionado ao submeter o formulário', async () => {
+    renderWithRouter(<App />, '/');
     const emailInput = screen.getByTestId(EMAIL_INPUT);
     const passwordInput = screen.getByTestId(PASS_INPUT);
     const submitBtn = screen.getByTestId(BUTTON_SUBMIT);
 
     userEvent.type(emailInput, 'test@mail.com');
     userEvent.type(passwordInput, '1234567');
-
     userEvent.click(submitBtn);
 
-    expect(history.location.pathname).toBe('/meals');
+    const meals = await screen.getByRole('heading', {
+      name: /meals/i,
+    });
+    expect(meals).toBeInTheDocument();
+
+    expect(window.location.pathname).toBe('/meals');
   });
 });
