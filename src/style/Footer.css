@@ -1,8 +1,8 @@
 .footer-page {
   bottom: 0;
-  position: fixed;
-  width: 100%;
-  text-align: center;
   display: flex;
   justify-content: space-around;
+  position: fixed;
+  text-align: center;
+  width: 100%;
 }
