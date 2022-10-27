@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useFetchIDMeals from '../helper/useFetchIDMeals';
+import useFetchRecommendDrinks from '../helper/useFetchRecommendDrinks';
 
 function MealRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
@@ -7,8 +8,11 @@ function MealRevenueDetail({ id }) {
   const [quantity, setQuantity] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
   const [drinks, setDrinks] = useState([]);
+  const [filteredDrinks, setFilteredDrinks] = useState([]);
+
 
   useFetchIDMeals(id, setSelectedRevenue);
+  useFetchRecommendDrinks(setDrinks)
 
   const getIngredients = () => {
     if (selectedRevenue.length > 0) {
@@ -43,19 +47,12 @@ function MealRevenueDetail({ id }) {
 
   useEffect(() => showIngredients(), [ingredient, quantity]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const requestAPI = await fetch(
-        'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=',
-      );
+  const showDrinks = () => {
+    const selectedDrinks = drinks.slice(null, 6)
+    setFilteredDrinks(selectedDrinks)
+  }
 
-      const response = await requestAPI.json();
-      setDrinks(response.drinks)
-    }
-    fetchData();
-  }, [selectedRevenue]);
-
-  console.log(drinks)
+  useEffect(() => showDrinks(), [drinks])
 
   return (
     <div>
@@ -87,6 +84,13 @@ function MealRevenueDetail({ id }) {
         >
           {e}
         </ul>))}
+        <h4>Recommended Drinks</h4>
+        {filteredDrinks && filteredDrinks.map((drink, index) =>
+        <div key={index}> 
+        <img src={drink.strDrinkThumb}/>
+        <span>{drink.strDrink}</span>
+        </div>)
+        }
     </div>
   );
 }
