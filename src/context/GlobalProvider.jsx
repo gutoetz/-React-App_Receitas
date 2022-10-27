@@ -29,7 +29,6 @@ function GlobalProvider({ children }) {
       return global.alert('Sorry, we haven\'t found any recipes for these filters.');
     }
     if (data.length === 1) {
-      console.log(history);
       return history.push(`/${pageTitle.toLowerCase()}/${data[0][path]}`);
     }
     setRevenues(data.splice(0, MAX_RENDER));
