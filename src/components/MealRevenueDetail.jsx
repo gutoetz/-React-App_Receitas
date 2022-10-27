@@ -3,6 +3,8 @@ import useFetchIDMeals from "../helper/useFetchIDMeals";
 import useFetchRecommendDrinks from "../helper/useFetchRecommendDrinks";
 import { useHistory } from "react-router-dom";
 import shareIcon from "../images/shareIcon.svg";
+import blackHeartIcon from "../images/blackHeartIcon.svg";
+import whiteHeartIcon from "../images/whiteHeartIcon.svg";
 
 const copy = require("clipboard-copy");
 
@@ -14,6 +16,9 @@ function MealRevenueDetail({ id }) {
   const [drinks, setDrinks] = useState([]);
   const [filteredDrinks, setFilteredDrinks] = useState([]);
   const [startButton, setStartButton] = useState("Start Recipe");
+  const [showCopied, setShowCopied] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const history = useHistory();
 
   useFetchIDMeals(id, setSelectedRevenue);
@@ -65,6 +70,31 @@ function MealRevenueDetail({ id }) {
 
   function shareRevenue() {
     copy(history.location.pathname);
+    setShowCopied(true);
+  }
+
+  // const allPlayers = JSON.parse(localStorage.getItem('players'));
+  
+  function showFavorite() {
+    if (isFavorite === false) {
+      if (localStorage.getItem('favoriteRecipes') === null) {
+        let favoriteRevenue = {
+          id:selectedRevenue[0].idMeal, 
+          type:'meal', 
+          nationality:selectedRevenue[0].strArea, 
+          category: selectedRevenue[0].strCategory, 
+          alcoholicOrNot: 'non-alcoholic', 
+          name:selectedRevenue[0].strMeal, 
+          image:selectedRevenue[0].strMealThumb
+        }
+          const arrayFavorite = [];
+          const allFavorite = arrayFavorite.push(...favoriteRevenue, favoriteRevenue)
+          localStorage.setItem('favoriteRecipes', JSON.stringify(allFavorite))
+          setIsFavorite(true);
+        }
+      } else {
+        setIsFavorite(false);
+      }
   }
 
   return (
@@ -109,10 +139,22 @@ function MealRevenueDetail({ id }) {
       >
         {startButton}
       </button>
-      <div id="liveAlertPlaceholder">
-      <button onClick={shareRevenue} type="button" class="btn btn-primary" id="liveAlertBtn">
-        <img src={shareIcon} />
-      </button>
+      <div>
+        <button onClick={shareRevenue} type="button" data-testid="share-btn">
+          <img src={shareIcon} alt="shareIcon" />
+        </button>
+        {showCopied && <span>Link copied!</span>}
+      </div>
+      <div>
+        {isFavorite === false ? (
+          <button onClick={showFavorite} data-testid="favorite-btn">
+            <img src={whiteHeartIcon} alt="White Heart Icon" />
+          </button>
+        ) : (
+          <button onClick={showFavorite} data-testid="favorite-btn">
+            <img src={blackHeartIcon} alt="Black Heart Icon" />
+          </button>
+        )}
       </div>
     </div>
   );
