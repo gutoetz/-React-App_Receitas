@@ -8,6 +8,7 @@ function RevenueCard(infos) {
   function selectedRevenue(id) {
     history.push(`/meals/${id}`);
   }
+  
   return (
     <div data-testid={ `${index}-recipe-card` }>
       <h4 data-testid={ `${index}-card-name` }>{cardInfo[name]}</h4>
