@@ -17,6 +17,7 @@ export default function Meals() {
               name="strMeal"
               index={ index }
               key={ index }
+              id={ revenue.idMeal }
             />
           ))
         )}

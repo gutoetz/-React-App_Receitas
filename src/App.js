@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import GlobalProvider from './context/GlobalProvider';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
+import RecipeDetails from './pages/RecipeDetails';
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
       <Route exact path="/" component={ Login } />
       <Route exact path="/meals" component={ Meals } />
       <Route exact path="/drinks" component={ Drinks } />
-      <Route exact path="/meals/:id" />
+      <Route exact path="/meals/:id" component={ RecipeDetails } />
       <Route exact path="/drinks/:id" />
       <Route exact path="/meals/:id/in-progress" />
       <Route exact path="/drinks/:id/in-progress" />
