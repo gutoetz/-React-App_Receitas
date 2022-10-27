@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import useFetchIDMeals from '../helper/useFetchIDMeals';
-import useFetchRecommendDrinks from '../helper/useFetchRecommendDrinks';
+import React, { useState, useEffect } from "react";
+import useFetchIDMeals from "../helper/useFetchIDMeals";
+import useFetchRecommendDrinks from "../helper/useFetchRecommendDrinks";
+import { useHistory } from "react-router-dom";
+import shareIcon from "../images/shareIcon.svg";
+
+const copy = require("clipboard-copy");
 
 function MealRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
@@ -9,10 +13,11 @@ function MealRevenueDetail({ id }) {
   const [allIngredients, setAllIngredients] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [filteredDrinks, setFilteredDrinks] = useState([]);
-
+  const [startButton, setStartButton] = useState("Start Recipe");
+  const history = useHistory();
 
   useFetchIDMeals(id, setSelectedRevenue);
-  useFetchRecommendDrinks(setDrinks)
+  useFetchRecommendDrinks(setDrinks);
 
   const getIngredients = () => {
     if (selectedRevenue.length > 0) {
@@ -21,7 +26,7 @@ function MealRevenueDetail({ id }) {
       for (let index = 9; index <= 28; index++) {
         arrayIngredients.push(filterIngredients[index]);
       }
-      const allIngredients = arrayIngredients.filter((e) => e !== '');
+      const allIngredients = arrayIngredients.filter((e) => e !== "");
       setIngredient(allIngredients);
     }
   };
@@ -33,7 +38,7 @@ function MealRevenueDetail({ id }) {
       for (let index = 29; index <= 48; index++) {
         arrayQuantity.push(filterQuantity[index]);
       }
-      const allQuantity = arrayQuantity.filter((e) => e !== '');
+      const allQuantity = arrayQuantity.filter((e) => e !== "");
       setQuantity(allQuantity);
     }
   };
@@ -48,49 +53,67 @@ function MealRevenueDetail({ id }) {
   useEffect(() => showIngredients(), [ingredient, quantity]);
 
   const showDrinks = () => {
-    const selectedDrinks = drinks.slice(null, 6)
-    setFilteredDrinks(selectedDrinks)
+    const selectedDrinks = drinks.slice(null, 6);
+    setFilteredDrinks(selectedDrinks);
+  };
+
+  useEffect(() => showDrinks(), [drinks]);
+
+  function redirectStart() {
+    history.push(`/meals/${id}/in-progress`);
   }
 
-  useEffect(() => showDrinks(), [drinks])
+  function shareRevenue() {
+    copy(history.location.pathname);
+  }
 
   return (
     <div>
-      {selectedRevenue
-        && selectedRevenue.map((revenue) => (
-          <div key={ revenue.strMeal }>
+      {selectedRevenue &&
+        selectedRevenue.map((revenue) => (
+          <div key={revenue.strMeal}>
             <h3 data-testid="recipe-title">{revenue.strMeal}</h3>
             <h4 data-testid="recipe-category">{revenue.strCategory}</h4>
             <img
-              src={ revenue.strMealThumb }
+              src={revenue.strMealThumb}
               alt="Selected Revenue"
               data-testid="recipe-photo"
             />
-            <p data-testid="instructions">
-              {revenue.strInstructions}
-            </p>
-            {revenue.strYoutube
-            && <iframe
-              src={ revenue.strYoutube }
-              data-testid="video"
-            />}
+            <p data-testid="instructions">{revenue.strInstructions}</p>
+            {revenue.strYoutube && (
+              <iframe src={revenue.strYoutube} data-testid="video" />
+            )}
           </div>
         ))}
       <li>Ingredients:</li>
-      {allIngredients && allIngredients
-        .map((e, index) => (<ul
-          key={ index }
-          data-testid={ `${index}-ingredient-name-and-measure` }
-        >
-          {e}
-        </ul>))}
-        <h4>Recommended Drinks</h4>
-        {filteredDrinks && filteredDrinks.map((drink, index) =>
-        <div key={index}> 
-        <img src={drink.strDrinkThumb}/>
-        <span>{drink.strDrink}</span>
-        </div>)
-        }
+      {allIngredients &&
+        allIngredients.map((e, index) => (
+          <ul key={index} data-testid={`${index}-ingredient-name-and-measure`}>
+            {e}
+          </ul>
+        ))}
+      <h4>Recommended Drinks</h4>
+      {filteredDrinks &&
+        filteredDrinks.map((drink, index) => (
+          <div key={index} data-testid={`${index}-recommendation-card`}>
+            <img src={drink.strDrinkThumb} />
+            <span data-testid={`${index}-recommendation-title`}>
+              {drink.strDrink}
+            </span>
+          </div>
+        ))}
+      <button
+        data-testid="start-recipe-btn"
+        type="button"
+        onClick={() => redirectStart()}
+      >
+        {startButton}
+      </button>
+      <div id="liveAlertPlaceholder">
+      <button onClick={shareRevenue} type="button" class="btn btn-primary" id="liveAlertBtn">
+        <img src={shareIcon} />
+      </button>
+      </div>
     </div>
   );
 }
