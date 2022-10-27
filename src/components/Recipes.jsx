@@ -1,9 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function RecipesCard(infos) {
-  const { cardInfo, type, name, index } = infos;
+  const { cardInfo, type, name, index, idRoute, title } = infos;
+  console.log(infos);
   return (
-    <div>
+    <Link to={ `/${title}/${cardInfo[idRoute]}` }>
       <div data-testid={ `${index}-recipe-card` }>
         <h4 data-testid={ `${index}-card-name` }>{cardInfo[name]}</h4>
         <img
@@ -12,7 +14,7 @@ function RecipesCard(infos) {
           data-testid={ `${index}-card-img` }
         />
       </div>
-    </div>
+    </Link>
 
   );
 }

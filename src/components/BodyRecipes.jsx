@@ -18,6 +18,7 @@ function BodyRecipes({ title }) {
   const { setSearching, searching } = useContext(GlobalContext);
   const MAX_RENDER = 12;
   const MAX_CATEGORYS = 5;
+  const idRoute = title === 'Drinks' ? 'idDrink' : 'idMeal';
   const pageName = title === 'Drinks' ? 'Drink' : 'Meal';
   const paramEndPoint = title === 'Drinks' ? 'thecocktaildb' : 'themealdb';
 
@@ -25,7 +26,6 @@ function BodyRecipes({ title }) {
 
   const settingRevenues = useCallback((dataJson) => {
     const data = dataJson[title.toLowerCase()];
-    const idRoute = title === 'Drinks' ? 'idDrink' : 'idMeal';
     if (data === null) {
       return global.alert('Sorry, we haven\'t found any recipes for these filters.');
     }
@@ -33,7 +33,7 @@ function BodyRecipes({ title }) {
       return history.push(`/${title.toLowerCase()}/${data[0][idRoute]}`);
     }
     setRevenues(data.slice(0, MAX_RENDER));
-  }, [history, title]);
+  }, [history, title, idRoute]);
 
   const fetchingRevenues = useCallback(async (searchType, searchInput) => {
     const letter = searchType === 'Name' ? 's' : 'f';
@@ -135,6 +135,8 @@ function BodyRecipes({ title }) {
       {revenues && (
         revenues.map((revenue, index) => (
           <RecipesCard
+            title={ title.toLowerCase() }
+            idRoute={ idRoute }
             cardInfo={ revenue }
             type={ `str${pageName}Thumb` }
             name={ `str${pageName}` }
