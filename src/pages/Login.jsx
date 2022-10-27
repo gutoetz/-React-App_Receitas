@@ -7,13 +7,6 @@ function Login() {
   const [validInfos, setValidInfos] = useState(false);
 
   const history = useHistory();
-  const handleChange = ({ target: { id, value } }) => {
-    if (id === 'email') {
-      setEmail(value);
-    } else {
-      setPassword(value);
-    }
-  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,16 +17,9 @@ function Login() {
   useEffect(() => {
     const validLogin = () => {
       const MAX_NUM = 6;
-      const pattern = email
-        .toLowerCase()
-        .match(
-          /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+?$/i,
-        );
-      if (pattern && password.length > MAX_NUM) {
-        setValidInfos(false);
-      } else {
-        setValidInfos(true);
-      }
+      const isValidEmail = (/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+?$/i).test(email);
+
+      setValidInfos(!(isValidEmail && password.length > MAX_NUM));
     };
 
     validLogin();
@@ -45,13 +31,13 @@ function Login() {
         type="email"
         data-testid="email-input"
         id="email"
-        onChange={ handleChange }
+        onChange={ ({ target: { value } }) => setEmail(value) }
       />
       <input
         type="password"
         data-testid="password-input"
         id="password"
-        onChange={ handleChange }
+        onChange={ ({ target: { value } }) => setPassword(value) }
       />
       <button
         type="submit"
