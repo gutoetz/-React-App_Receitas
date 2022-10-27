@@ -7,7 +7,6 @@ function Login() {
   const [validInfos, setValidInfos] = useState(false);
 
   const history = useHistory();
-  console.log(history);
   const handleChange = ({ target: { id, value } }) => {
     if (id === 'email') {
       setEmail(value);

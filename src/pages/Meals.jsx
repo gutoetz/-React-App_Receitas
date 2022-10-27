@@ -1,26 +1,13 @@
-import React, { useContext } from 'react';
-import RevenueCard from '../components/Card';
+import React from 'react';
 import Header from '../components/Header';
-import GlobalContext from '../context/GlobalContext';
+import BodyRecipes from '../components/BodyRecipes';
 
 export default function Meals() {
-  const { revenues } = useContext(GlobalContext);
   return (
+
     <div>
       <Header title="Meals" />
-      <div>
-        {revenues && (
-          revenues.map((revenue, index) => (
-            <RevenueCard
-              cardInfo={ revenue }
-              type="strMealThumb"
-              name="strMeal"
-              index={ index }
-              key={ index }
-            />
-          ))
-        )}
-      </div>
+      <BodyRecipes title="Meals" />
     </div>
   );
 }
