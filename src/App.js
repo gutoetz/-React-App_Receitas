@@ -11,8 +11,6 @@ import FavoriteRecipes from './pages/FavoriteRecipes';
 
 function App() {
   return (
-    // <BrowserRouter>
-    //   <GlobalProvider>
     <Switch>
       <Route exact path="/" component={ Login } />
       <Route exact path="/meals" component={ Meals } />

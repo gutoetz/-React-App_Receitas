@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import RevenueCard from '../components/Card';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
 import GlobalContext from '../context/GlobalContext';
 
@@ -8,6 +9,7 @@ export default function Meals() {
   return (
     <div>
       <Header title="Meals" />
+      <Footer />
       <div>
         {revenues && (
           revenues.map((revenue, index) => (
