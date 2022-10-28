@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 function RecipesCard(infos) {
   const { cardInfo, type, name, index, idRoute, title } = infos;
-  console.log(infos);
+
   return (
     <Link to={ `/${title}/${cardInfo[idRoute]}` }>
       <div data-testid={ `${index}-recipe-card` }>
