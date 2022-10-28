@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 // import { Link } from 'react-router-dom';
-
 function DoneRecipesCard(infos) {
   const { index, recipes: { type, nationality, tags, image, name,
     category, doneDate, alcoholicOrNot, id } } = infos;
@@ -12,7 +11,7 @@ function DoneRecipesCard(infos) {
     navigator.clipboard.writeText(`http://localhost:3000/meals/${id}`);
     setCopied(true);
   };
-
+  const history = useHistory();
   return (
     <div>
       <Link to={ `/${type}s/${id}` }>
@@ -37,8 +36,10 @@ function DoneRecipesCard(infos) {
           src={ image }
           alt="ReceiptImg"
           data-testid={ `${index}-horizontal-image` }
+          width="300px"
         />
       </Link>
+
       <img
         src={ shareIcon }
         alt="Share Button"
