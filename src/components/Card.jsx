@@ -6,7 +6,11 @@ function RevenueCard(infos) {
   const history = useHistory();
 
   function selectedRevenue(id) {
+    if(history.location.pathname.includes('meals')) {
     history.push(`/meals/${id}`);
+    } else {
+      history.push(`/drinks/${id}`)
+    }
   }
   
   return (
