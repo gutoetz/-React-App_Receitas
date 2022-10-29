@@ -71,9 +71,11 @@ function MealRevenueDetail({ id }) {
   };
 
   const verifyFavorite = (id) => {
-    const allFavorites = JSON.parse(localStorage.getItem("favoriteRecipes"));
-    const haveFavorite = allFavorites.some((e) => e.id === id);
-    setIsFavorite(haveFavorite);
+    if (localStorage.getItem("favoriteRecipes") !== null) {
+      const allFavorites = JSON.parse(localStorage.getItem("favoriteRecipes"));
+      const haveFavorite = allFavorites.some((e) => e.id === id);
+      setIsFavorite(haveFavorite);
+    }
   };
 
   const showDrinks = () => {
@@ -96,7 +98,7 @@ function MealRevenueDetail({ id }) {
       type: "meal",
       nationality: selectedRevenue[0].strArea,
       category: selectedRevenue[0].strCategory,
-      alcoholicOrNot: "non-alcoholic",
+      alcoholicOrNot: "",
       name: selectedRevenue[0].strMeal,
       image: selectedRevenue[0].strMealThumb,
     };
