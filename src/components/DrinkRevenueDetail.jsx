@@ -26,7 +26,7 @@ function DrinkRevenueDetail({ id }) {
   useFetchIdDrinks(id, setSelectedRevenue);
   console.log(selectedRevenue)
 
-  useFetchRecommendMeals(setMeals);
+  // useFetchRecommendMeals(setMeals);
 
   useEffect(() => getIngredients(), [selectedRevenue]);
   useEffect(() => getQuantity(), [selectedRevenue]);
@@ -81,7 +81,8 @@ function DrinkRevenueDetail({ id }) {
   }
 
   function shareRevenue() {
-    copy(history.location.pathname);
+    const copyUrl = `http://localhost:3000/drinks/${id}`
+    copy(copyUrl);
     setShowCopied(true);
   }
 
@@ -128,6 +129,7 @@ function DrinkRevenueDetail({ id }) {
               src={revenue.strDrinkThumb}
               alt="Selected Revenue"
               data-testid="recipe-photo"
+              width='150px'
             />
             <p data-testid="instructions">{revenue.strInstructions}</p>
             </div>
@@ -139,12 +141,13 @@ function DrinkRevenueDetail({ id }) {
             {e}
           </ul>
         ))}
-      <h4>Recommended Drinks</h4>
+      <h4>Recommended Meals</h4>
       {filteredMeals && <CarouselMeals filteredMeals={filteredMeals} />}
       <button
         data-testid="start-recipe-btn"
         type="button"
         onClick={() => redirectStart()}
+        className='recipeDetailsButton'
       >
         {startButton}
       </button>
