@@ -37,6 +37,12 @@
   font-weight: 900;
 }
 
+.recipeDetailsButton {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+}
+
 @keyframes shake {
 
   0% {

@@ -35,7 +35,6 @@ function MealRevenueDetail({ id }) {
   const embedVideo = () => {
     if (selectedRevenue.length > 0) {
       const url = selectedRevenue[0].strYoutube;
-      console.log(url);
       const customURL = [url.slice(0, 23), "/embed", url.slice(23)].join("");
       setEmbedURL(customURL);
     }
@@ -88,7 +87,8 @@ function MealRevenueDetail({ id }) {
   }
 
   function shareRevenue() {
-    copy(history.location.pathname);
+    const copyUrl = `http://localhost:3000/meals/${id}`
+    copy(copyUrl);
     setShowCopied(true);
   }
 
@@ -135,6 +135,7 @@ function MealRevenueDetail({ id }) {
               src={revenue.strMealThumb}
               alt="Selected Revenue"
               data-testid="recipe-photo"
+              width='150px'
             />
             <p data-testid="instructions">{revenue.strInstructions}</p>
             {revenue.strYoutube && (
@@ -164,11 +165,12 @@ function MealRevenueDetail({ id }) {
         data-testid="start-recipe-btn"
         type="button"
         onClick={() => redirectStart()}
+        className='recipeDetailsButton'
       >
         {startButton}
       </button>
       <div>
-        <button onClick={shareRevenue} type="button" data-testid="share-btn">
+        <button onClick={shareRevenue} type="button" data-testid="share-btn" >
           <img src={shareIcon} alt="shareIcon" />
         </button>
         {showCopied && <span>Link copied!</span>}
