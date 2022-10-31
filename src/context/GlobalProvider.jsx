@@ -8,11 +8,15 @@ function GlobalProvider({ children }) {
     parameters: [],
   });
 
+  const [favoriteRecipes, setFavoriteRecipes] = useState();
+
   // context
   const contextValue = useMemo(() => ({
     searching,
+    favoriteRecipes,
+    setFavoriteRecipes,
     setSearching,
-  }), [searching]);
+  }), [searching, favoriteRecipes]);
 
   return (
     <GlobalContext.Provider value={ contextValue }>
