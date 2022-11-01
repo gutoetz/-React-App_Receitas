@@ -16,7 +16,6 @@ function SearchBar() {
       global.alert('Your search must have only 1 (one) character');
     }
     setSearchInput(value);
-    console.log(value);
   };
 
   const handleSearchType = () => {
