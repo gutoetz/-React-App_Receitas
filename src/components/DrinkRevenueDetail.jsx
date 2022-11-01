@@ -47,7 +47,10 @@ function DrinkRevenueDetail({ id }) {
       const nullQuantity = filterIngredients
         .filter((e) => e[0].includes('strMeasure'))
         .filter((i) => i[1] !== null);
-      setAllIngredients(nullEntries.map((e, i) => `${e[1]}: ${nullQuantity[i][1]}`));
+      setAllIngredients(nullEntries.map((e, i) => {
+        const quantity = nullQuantity[i] ? (`: ${nullQuantity[i][1]}`) : '';
+        return `${e[1]}${quantity}`;
+      }));
     }
   };
 

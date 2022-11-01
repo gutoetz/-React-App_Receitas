@@ -7,16 +7,6 @@ function Login() {
   const [validInfos, setValidInfos] = useState(false);
 
   const history = useHistory();
-<<<<<<< HEAD
-=======
-  const handleChange = ({ target: { id, value } }) => {
-    if (id === 'email') {
-      setEmail(value);
-    } else {
-      setPassword(value);
-    }
-  };
->>>>>>> 66787c5 (Requisito 24, 25 e 26 sem lint)
 
   const handleSubmit = (event) => {
     event.preventDefault();
