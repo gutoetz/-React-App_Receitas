@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFetchIdDrinks from '../helper/useFetchIdDrinks';
@@ -8,6 +9,8 @@ import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import CarouselMeals from './CarouselMeals';
 
 const copy = require('clipboard-copy');
+
+const NUMBER_SIX = 6;
 
 function DrinkRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
@@ -24,11 +27,6 @@ function DrinkRevenueDetail({ id }) {
 
   useFetchRecommendMeals(setMeals);
 
-  useEffect(() => getIngredients(), [selectedRevenue]);
-  useEffect(() => verifyFavorite(id), []);
-  useEffect(() => showMeals(), [meals]);
-  useEffect(() => getInprogress(), []);
-
   const getInprogress = () => {
     if (localStorage.getItem('inProgressRecipes') !== null) {
       const continueRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
@@ -38,16 +36,24 @@ function DrinkRevenueDetail({ id }) {
     }
   };
 
+  useEffect(() => getInprogress(), []);
+
   const getIngredients = () => {
     if (selectedRevenue.length > 0) {
       const filterIngredients = Object.entries(selectedRevenue[0]);
-      const nullEntries = filterIngredients.filter((e) => e[0].includes('strIngredient')).filter((i) => i[1] !== null);
-      const nullQuantity = filterIngredients.filter((e) => e[0].includes('strMeasure')).filter((i) => i[1] !== null);
+      const nullEntries = filterIngredients
+        .filter((e) => e[0].includes('strIngredient'))
+        .filter((i) => i[1] !== null);
+      const nullQuantity = filterIngredients
+        .filter((e) => e[0].includes('strMeasure'))
+        .filter((i) => i[1] !== null);
       setAllIngredients(nullEntries.map((e, i) => `${e[1]}: ${nullQuantity[i][1]}`));
     }
   };
 
-  const verifyFavorite = (id) => {
+  useEffect(() => getIngredients(), [selectedRevenue]);
+
+  const verifyFavorite = () => {
     if (localStorage.getItem('favoriteRecipes') !== null) {
       const allFavorites = JSON.parse(localStorage.getItem('favoriteRecipes'));
       const haveFavorite = allFavorites.some((e) => e.id === id);
@@ -55,10 +61,14 @@ function DrinkRevenueDetail({ id }) {
     }
   };
 
+  useEffect(() => verifyFavorite(), []);
+
   const showMeals = () => {
-    const selectedMeals = meals.slice(null, 6);
+    const selectedMeals = meals.slice(null, NUMBER_SIX);
     setFilteredMeals(selectedMeals);
   };
+
+  useEffect(() => showMeals(), [meals]);
 
   function redirectStart() {
     history.push(`/drinks/${id}/in-progress`);
@@ -91,7 +101,7 @@ function DrinkRevenueDetail({ id }) {
     redirectStart();
   }
 
-  function showFavorite(id) {
+  function showFavorite() {
     const favoriteRevenue = {
       id: selectedRevenue[0].idDrink,
       type: 'drink',
@@ -164,17 +174,29 @@ function DrinkRevenueDetail({ id }) {
       </div>
       <div>
         {isFavorite === false ? (
-          <button onClick={ () => showFavorite(id) }>
-            <img src={ whiteHeartIcon } alt="White Heart Icon" data-testid="favorite-btn" />
+          <button onClick={ () => showFavorite() } type="button">
+            <img
+              src={ whiteHeartIcon }
+              alt="White Heart Icon"
+              data-testid="favorite-btn"
+            />
           </button>
         ) : (
-          <button onClick={ () => showFavorite(id) }>
-            <img src={ blackHeartIcon } alt="Black Heart Icon" data-testid="favorite-btn" />
+          <button onClick={ () => showFavorite() } type="button">
+            <img
+              src={ blackHeartIcon }
+              alt="Black Heart Icon"
+              data-testid="favorite-btn"
+            />
           </button>
         )}
       </div>
     </div>
   );
 }
+
+DrinkRevenueDetail.propTypes = {
+  id: PropTypes.number.isRequired,
+};
 
 export default DrinkRevenueDetail;

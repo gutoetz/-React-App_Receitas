@@ -13,6 +13,7 @@ export default function CarouselCard({ filteredDrinks }) {
               src={ drink.strDrinkThumb }
               width="250px"
               height="250px"
+              alt="Recommended Drink"
             />
             <div data-testid={ `${index}-recommendation-title` }>
               {drink.strDrink}
@@ -23,6 +24,8 @@ export default function CarouselCard({ filteredDrinks }) {
   );
 }
 
-Carousel.propTypes = {
-  filteredDrinks: PropTypes.arrayOf({}).isRequired,
+CarouselCard.propTypes = {
+  filteredDrinks: PropTypes.shape({
+    map: PropTypes.func.isRequired,
+  }).isRequired,
 };

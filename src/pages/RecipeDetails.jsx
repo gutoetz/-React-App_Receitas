@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import MealRevenueDetail from '../components/MealRevenueDetail';
 import DrinkRevenueDetail from '../components/DrinkRevenueDetail';
 
@@ -16,5 +17,9 @@ function RecipeDetails({ type }) {
     </div>
   );
 }
+
+RecipeDetails.propTypes = {
+  type: PropTypes.string.isRequired,
+};
 
 export default RecipeDetails;
