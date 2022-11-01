@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { Link, useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 
@@ -12,7 +11,6 @@ function DoneRecipesCard(infos) {
     navigator.clipboard.writeText(`http://localhost:3000/meals/${id}`);
     setCopied(true);
   };
-  // const history = useHistory();
   return (
     <div>
       <Link to={ `/${type}s/${id}` }>
