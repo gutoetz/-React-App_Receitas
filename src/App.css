@@ -40,7 +40,7 @@
 .recipeDetailsButton {
   position: fixed;
   bottom: 0;
-  display: flex;
+  margin-left: 200px;
 }
 
 @keyframes shake {
