@@ -2,9 +2,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helper/renderWithRouter';
-
 import LocalStorageMock from './helper/LocalStorageMock';
-
 import FavoriteRecipes from '../pages/FavoriteRecipes';
 
 Object.assign(navigator, {
