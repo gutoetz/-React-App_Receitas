@@ -53,7 +53,7 @@ function DrinkRevenueDetail({ id }) {
       }));
     }
   };
-  console.log('oi')
+  
   useEffect(() => getIngredients(), [selectedRevenue]);
 
   const verifyFavorite = () => {
