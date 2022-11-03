@@ -99,14 +99,13 @@ function MealRevenueDetail({ id }) {
     const inProgress = {
       drinks: {},
       meals: {
-        [selectedRevenue[0].idMeal]: allIngredients,
+        [selectedRevenue[0].idMeal]: [],
       },
     };
     if (localStorage.getItem('inProgressRecipes') === null) {
       localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
     } else {
       const progressRevenues = JSON.parse(localStorage.getItem('inProgressRecipes'));
-      progressRevenues.meals[selectedRevenue[0].idMeal] = allIngredients;
       localStorage.setItem('inProgressRecipes', JSON.stringify(progressRevenues));
     }
   }
@@ -232,7 +231,7 @@ function MealRevenueDetail({ id }) {
 }
 
 MealRevenueDetail.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default MealRevenueDetail;

@@ -10,7 +10,7 @@ function RecipeInProgress() {
   const history = useHistory();
   const pageTitle = history.location.pathname.includes('drink') ? 'drinks' : 'meals';
   const acess = pageTitle === 'meals' ? 'Meal' : 'Drink';
-  const nAcess = pageTitle === 'meals' ? 'Drink' : 'Meal';
+  const nPageTitle = pageTitle === 'meals' ? 'drinks' : 'meals';
   const url = pageTitle === 'meals' ? 'themealdb' : 'thecocktaildb';
 
   // states
@@ -31,17 +31,17 @@ function RecipeInProgress() {
       const progress = JSON.parse(localStorage.getItem('inProgressRecipes')) || [];
       if (progress === null || progress.length === 0) {
         const progressObject = {
-          [acess]: {
+          [pageTitle]: {
             [id]: [],
           },
-          [nAcess]: {},
+          [nPageTitle]: {},
         };
         return localStorage.setItem('inProgressRecipes', JSON.stringify(progressObject));
       }
-      if (progress[acess][id]) {
-        return setCheckedList([...progress[acess][id]]);
+      if (progress[pageTitle][id]) {
+        return setCheckedList([...progress[pageTitle][id]]);
       }
-      progress[acess][id] = [];
+      progress[pageTitle][id] = [];
       localStorage.setItem('inProgressRecipes', JSON.stringify(progress));
     }
     const getfavorites = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
@@ -52,7 +52,7 @@ function RecipeInProgress() {
     }
     fetching();
     gettingProgress();
-  }, [id, pageTitle, url, acess, nAcess]);
+  }, [id, pageTitle, url, acess, nPageTitle]);
 
   // update
   useEffect(() => {
@@ -74,11 +74,11 @@ function RecipeInProgress() {
     const gettingLocal = JSON.parse(localStorage.getItem('inProgressRecipes'));
     if (checkedList.includes(usedIngredient)) {
       setCheckedList(checkedList.filter((e) => e !== usedIngredient));
-      gettingLocal[acess][id] = checkedList.filter((e) => e !== usedIngredient);
+      gettingLocal[pageTitle][id] = checkedList.filter((e) => e !== usedIngredient);
       localStorage.setItem('inProgressRecipes', JSON.stringify(gettingLocal));
     } else {
       setCheckedList([...checkedList, usedIngredient]);
-      gettingLocal[acess][id] = [...checkedList, usedIngredient];
+      gettingLocal[pageTitle][id] = [...checkedList, usedIngredient];
       localStorage.setItem('inProgressRecipes', JSON.stringify(gettingLocal));
     }
   };
