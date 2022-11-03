@@ -152,7 +152,7 @@ function DrinkRevenueDetail({ id }) {
             <p data-testid="instructions">{revenue.strInstructions}</p>
           </div>
         ))}
-      <li>Ingredients:</li>
+      <li data-testid='ingredientsList'>Ingredients:</li>
       {allIngredients
         && allIngredients.map((e, index) => (
           <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
@@ -199,7 +199,7 @@ function DrinkRevenueDetail({ id }) {
 }
 
 DrinkRevenueDetail.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default DrinkRevenueDetail;
