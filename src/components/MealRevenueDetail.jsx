@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFetchIDMeals from '../helper/useFetchIDMeals';
 import useFetchRecommendDrinks from '../helper/useFetchRecommendDrinks';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import CarouselCard from './Carousel';
+import CarouselDrinks from './CarouselDrinks';
 
 const copy = require('clipboard-copy');
 
 const NUMBER_SIX = 6;
-const sliceIndex = 23;
+const SLICE_INDEX = 23;
 
 function MealRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
@@ -28,30 +28,30 @@ function MealRevenueDetail({ id }) {
   useFetchIDMeals(id, setSelectedRevenue);
   useFetchRecommendDrinks(setDrinks);
 
-  const embedVideo = () => {
+  const embedVideo = useCallback(() => {
     if (selectedRevenue.length > 0) {
       const url = selectedRevenue[0].strYoutube;
       const customURL = [url
-        .slice(0, sliceIndex), '/embed', url
-        .slice(sliceIndex)].join('');
+        .slice(0, SLICE_INDEX), '/embed', url
+        .slice(SLICE_INDEX)].join('');
       setEmbedURL(customURL);
     }
-  };
+  }, [selectedRevenue]);
 
-  useEffect(() => embedVideo(), [selectedRevenue]);
+  useEffect(() => embedVideo(), [embedVideo]);
 
-  const getInprogress = () => {
+  const getInprogress = useCallback(() => {
     if (localStorage.getItem('inProgressRecipes') !== null) {
       const continueRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
       const newData = Object.keys(continueRecipes.meals);
       const haveRecipe = newData.some((e) => e === id);
       setStartButton(!haveRecipe);
     }
-  };
+  }, [id]);
 
-  useEffect(() => getInprogress(), []);
+  useEffect(() => getInprogress(), [getInprogress]);
 
-  const getIngredients = () => {
+  const getIngredients = useCallback(() => {
     if (selectedRevenue.length > 0) {
       const filterIngredients = Object
         .entries(selectedRevenue[0]);
@@ -64,26 +64,26 @@ function MealRevenueDetail({ id }) {
       setAllIngredients(nullEntries
         .map((e, i) => `${e[1]}: ${nullQuantity[i][1]}`));
     }
-  };
+  }, [selectedRevenue]);
 
-  useEffect(() => getIngredients(), [selectedRevenue]);
+  useEffect(() => getIngredients(), [getIngredients]);
 
-  const verifyFavorite = () => {
+  const verifyFavorite = useCallback(() => {
     if (localStorage.getItem('favoriteRecipes') !== null) {
       const allFavorites = JSON.parse(localStorage.getItem('favoriteRecipes'));
       const haveFavorite = allFavorites.some((e) => e.id === id);
       setIsFavorite(haveFavorite);
     }
-  };
+  }, [id]);
 
-  useEffect(() => verifyFavorite(), []);
+  useEffect(() => verifyFavorite(), [verifyFavorite]);
 
-  const showDrinks = () => {
+  const showDrinks = useCallback(() => {
     const selectedDrinks = drinks.slice(null, NUMBER_SIX);
     setFilteredDrinks(selectedDrinks);
-  };
+  }, [drinks]);
 
-  useEffect(() => showDrinks(), [drinks]);
+  useEffect(() => showDrinks(), [showDrinks]);
 
   function redirectStart() {
     history.push(`/meals/${id}/in-progress`);
@@ -150,46 +150,53 @@ function MealRevenueDetail({ id }) {
 
   return (
     <div>
-      {selectedRevenue
-        && selectedRevenue.map((revenue) => (
-          <div key={ revenue.strMeal }>
-            <h3 data-testid="recipe-title">{revenue.strMeal}</h3>
-            <h4 data-testid="recipe-category">{revenue.strCategory}</h4>
-            <img
-              src={ revenue.strMealThumb }
-              alt="Selected Revenue"
-              data-testid="recipe-photo"
-              width="150px"
+      { selectedRevenue && selectedRevenue.map((revenue) => (
+        <div key={ revenue.strMeal }>
+          <h3 data-testid="recipe-title">{revenue.strMeal}</h3>
+
+          <h4 data-testid="recipe-category">{revenue.strCategory}</h4>
+
+          <img
+            src={ revenue.strMealThumb }
+            alt="Selected Revenue"
+            data-testid="recipe-photo"
+            width="150px"
+          />
+
+          <p data-testid="instructions">{revenue.strInstructions}</p>
+
+          { revenue.strYoutube && (
+            <iframe
+              width="560"
+              height="315"
+              src={ embedURL }
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write;
+                encrypted-media; yroscope; picture-in-picture"
+              data-testid="video"
+              allowFullScreen
             />
-            <p data-testid="instructions">{revenue.strInstructions}</p>
-            {revenue.strYoutube && (
-              <iframe
-                width="560"
-                height="315"
-                src={ embedURL }
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer;
-                autoplay;
-                clipboard-write;
-                encrypted-media;
-                yroscope;
-                picture-in-picture"
-                data-testid="video"
-                allowFullScreen
-              />
-            )}
-          </div>
-        ))}
-      <li>Ingredients:</li>
-      {allIngredients
-        && allIngredients.map((e, index) => (
-          <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
+          ) }
+        </div>
+      )) }
+
+      <ul>
+        Ingredients:
+
+        { allIngredients && allIngredients.map((e, index) => (
+          <li key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
             {e}
-          </ul>
-        ))}
-      <h4>Recommended Drinks</h4>
-      {filteredDrinks && <CarouselCard filteredDrinks={ filteredDrinks } />}
+          </li>
+        )) }
+      </ul>
+
+      <div>
+        <h4>Recommended Drinks</h4>
+
+        { filteredDrinks && <CarouselDrinks filteredDrinks={ filteredDrinks } /> }
+      </div>
+
       <button
         data-testid="start-recipe-btn"
         type="button"
@@ -198,6 +205,7 @@ function MealRevenueDetail({ id }) {
       >
         {startButton ? ('Start Recipe') : ('Continue Recipe')}
       </button>
+
       <div>
         <button
           onClick={ shareRevenue }
@@ -206,10 +214,12 @@ function MealRevenueDetail({ id }) {
         >
           <img src={ shareIcon } alt="shareIcon" />
         </button>
+
         {showCopied && <span>Link copied!</span>}
       </div>
+
       <div>
-        {isFavorite === false ? (
+        { isFavorite === false ? (
           <button onClick={ () => showFavorite() } type="button">
             <img
               src={ whiteHeartIcon }
@@ -225,14 +235,14 @@ function MealRevenueDetail({ id }) {
               data-testid="favorite-btn"
             />
           </button>
-        )}
+        ) }
       </div>
     </div>
   );
 }
 
 MealRevenueDetail.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default MealRevenueDetail;

@@ -10,5 +10,5 @@ export default function useFetchRecommendMeals(setData) {
       setData(response.meals);
     }
     fetchData();
-  }, []);
+  }, [setData]);
 }

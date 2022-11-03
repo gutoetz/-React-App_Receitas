@@ -6,8 +6,18 @@ import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function FavoriteRecipesCard(infos) {
   const { favoriteRecipes, setFavoriteRecipes } = useContext(GlobalContext);
-  const { index, recipes: { type, nationality, image, name,
-    category, alcoholicOrNot, id } } = infos;
+  const {
+    index,
+    recipes: {
+      type,
+      nationality,
+      image,
+      name,
+      category,
+      alcoholicOrNot,
+      id,
+    },
+  } = infos;
   const [copied, setCopied] = useState(false);
 
   const copyToClipBoard = () => {
@@ -27,17 +37,19 @@ function FavoriteRecipesCard(infos) {
       <Link to={ `/${type}s/${id}` }>
         <p data-testid={ `${index}-horizontal-name` }>{name}</p>
       </Link>
+
       <h6 data-testid={ `${index}-horizontal-top-text` }>{type}</h6>
+
       <p data-testid={ `${index}-horizontal-top-text` }>
         {`${nationality} - ${category}`}
       </p>
-      {
-        alcoholicOrNot && (
-          <p data-testid={ `${index}-horizontal-top-text` }>
-            {alcoholicOrNot}
-          </p>
-        )
-      }
+
+      { alcoholicOrNot && (
+        <p data-testid={ `${index}-horizontal-top-text` }>
+          {alcoholicOrNot}
+        </p>
+      ) }
+
       <Link to={ `/${type}s/${id}` }>
         <img
           src={ image }
@@ -62,9 +74,10 @@ function FavoriteRecipesCard(infos) {
         onClick={ () => copyToClipBoard() }
         aria-hidden="true"
       />
-      {copied && <p>Link copied!</p>}
-    </div>
 
+      {copied && <p>Link copied!</p>}
+
+    </div>
   );
 }
 

@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 export default function CarouselDrinks({ filteredDrinks }) {
   return (
     <Carousel>
-      {filteredDrinks.map((drink, index) => (
+      { filteredDrinks.map((drink, index) => (
         <Carousel.Item key={ index }>
           <div data-testid={ `${index}-recommendation-card` }>
             <img
@@ -20,7 +20,7 @@ export default function CarouselDrinks({ filteredDrinks }) {
               {drink.strDrink}
             </div>
           </div>
-        </Carousel.Item>))}
+        </Carousel.Item>)) }
     </Carousel>
   );
 }

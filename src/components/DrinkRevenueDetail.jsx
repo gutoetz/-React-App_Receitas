@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+
 import useFetchIdDrinks from '../helper/useFetchIdDrinks';
 import useFetchRecommendMeals from '../helper/useFetchRecommendMeals';
 import shareIcon from '../images/shareIcon.svg';
@@ -27,18 +28,18 @@ function DrinkRevenueDetail({ id }) {
 
   useFetchRecommendMeals(setMeals);
 
-  const getInprogress = () => {
+  const getInprogress = useCallback(() => {
     if (localStorage.getItem('inProgressRecipes') !== null) {
       const continueRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
       const newData = Object.keys(continueRecipes.drinks);
       const haveRecipe = newData.some((e) => e === id);
       setStartButton(!haveRecipe);
     }
-  };
+  }, [id]);
 
-  useEffect(() => getInprogress(), []);
+  useEffect(() => getInprogress(), [getInprogress]);
 
-  const getIngredients = () => {
+  const getIngredients = useCallback(() => {
     if (selectedRevenue.length > 0) {
       const filterIngredients = Object.entries(selectedRevenue[0]);
       const nullEntries = filterIngredients
@@ -52,26 +53,26 @@ function DrinkRevenueDetail({ id }) {
         return `${e[1]}${quantity}`;
       }));
     }
-  };
+  }, [selectedRevenue]);
 
-  useEffect(() => getIngredients(), [selectedRevenue]);
+  useEffect(() => getIngredients(), [getIngredients]);
 
-  const verifyFavorite = () => {
+  const verifyFavorite = useCallback(() => {
     if (localStorage.getItem('favoriteRecipes') !== null) {
       const allFavorites = JSON.parse(localStorage.getItem('favoriteRecipes'));
       const haveFavorite = allFavorites.some((e) => e.id === id);
       setIsFavorite(haveFavorite);
     }
-  };
+  }, [id]);
 
-  useEffect(() => verifyFavorite(), []);
+  useEffect(() => verifyFavorite(), [verifyFavorite]);
 
-  const showMeals = () => {
+  const showMeals = useCallback(() => {
     const selectedMeals = meals.slice(null, NUMBER_SIX);
     setFilteredMeals(selectedMeals);
-  };
+  }, [meals]);
 
-  useEffect(() => showMeals(), [meals]);
+  useEffect(() => showMeals(), [showMeals]);
 
   function redirectStart() {
     history.push(`/drinks/${id}/in-progress`);
@@ -138,29 +139,39 @@ function DrinkRevenueDetail({ id }) {
 
   return (
     <div>
-      {selectedRevenue
-        && selectedRevenue.map((revenue) => (
-          <div key={ revenue.strDrink }>
-            <h3 data-testid="recipe-title">{revenue.strDrink}</h3>
-            <h4 data-testid="recipe-category">{revenue.strAlcoholic}</h4>
-            <img
-              src={ revenue.strDrinkThumb }
-              alt="Selected Revenue"
-              data-testid="recipe-photo"
-              width="150px"
-            />
-            <p data-testid="instructions">{revenue.strInstructions}</p>
-          </div>
-        ))}
-      <li>Ingredients:</li>
-      {allIngredients
-        && allIngredients.map((e, index) => (
-          <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
+      { selectedRevenue && selectedRevenue.map((revenue) => (
+        <div key={ revenue.strDrink }>
+          <h3 data-testid="recipe-title">{revenue.strDrink}</h3>
+
+          <h4 data-testid="recipe-category">{revenue.strAlcoholic}</h4>
+
+          <img
+            src={ revenue.strDrinkThumb }
+            alt="Selected Revenue"
+            data-testid="recipe-photo"
+            width="150px"
+          />
+
+          <p data-testid="instructions">{revenue.strInstructions}</p>
+        </div>
+      )) }
+
+      <ul>
+        Ingredients:
+
+        { allIngredients && allIngredients.map((e, index) => (
+          <li key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
             {e}
-          </ul>
-        ))}
-      <h4>Recommended Meals</h4>
-      {filteredMeals && <CarouselMeals filteredMeals={ filteredMeals } />}
+          </li>
+        )) }
+      </ul>
+
+      <div>
+        <h4>Recommended Meals</h4>
+
+        { filteredMeals && <CarouselMeals filteredMeals={ filteredMeals } /> }
+      </div>
+
       <button
         data-testid="start-recipe-btn"
         type="button"
@@ -169,14 +180,16 @@ function DrinkRevenueDetail({ id }) {
       >
         {startButton ? ('Start Recipe') : ('Continue Recipe')}
       </button>
+
       <div>
         <button onClick={ shareRevenue } type="button" data-testid="share-btn">
           <img src={ shareIcon } alt="shareIcon" />
         </button>
         {showCopied && <span>Link copied!</span>}
       </div>
+
       <div>
-        {isFavorite === false ? (
+        { isFavorite === false ? (
           <button onClick={ () => showFavorite() } type="button">
             <img
               src={ whiteHeartIcon }
@@ -192,7 +205,7 @@ function DrinkRevenueDetail({ id }) {
               data-testid="favorite-btn"
             />
           </button>
-        )}
+        ) }
       </div>
     </div>
   );
