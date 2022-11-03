@@ -3,7 +3,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
-import '../style/recipeInProgress.css';
 
 function RecipeInProgress() {
   // aux

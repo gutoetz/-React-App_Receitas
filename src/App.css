@@ -29,6 +29,14 @@
 }
 */
 
+.checkedInput {
+  text-decoration: line-through solid black;
+}
+
+.nonCheckedInput {
+  text-decoration: none;
+}
+
 .meals > .logo {
   animation: shake 1.5s infinite ease;
   color: aliceblue;
