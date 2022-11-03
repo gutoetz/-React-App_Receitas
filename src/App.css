@@ -38,9 +38,9 @@
 }
 
 .recipeDetailsButton {
-  position: fixed;
   bottom: 0;
   margin-left: 200px;
+  position: fixed;
 }
 
 @keyframes shake {
