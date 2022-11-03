@@ -1,15 +1,15 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 export default function useFetchRecommendMeals(setData) {
-useEffect(() => {
+  useEffect(() => {
     async function fetchData() {
       const requestAPI = await fetch(
         'https://www.themealdb.com/api/json/v1/1/search.php?s=',
       );
 
       const response = await requestAPI.json();
-      setData(response.meals)
+      setData(response.meals);
     }
     fetchData();
-  }, []);
+  }, [setData]);
 }

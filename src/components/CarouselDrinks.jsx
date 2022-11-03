@@ -3,20 +3,20 @@ import Carousel from 'react-bootstrap/Carousel';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 
-export default function CarouselMeals({ filteredMeals }) {
+export default function CarouselDrinks({ filteredDrinks }) {
   return (
     <Carousel>
-      {filteredMeals.map((meal, index) => (
+      {filteredDrinks.map((drink, index) => (
         <Carousel.Item key={ index }>
           <div data-testid={ `${index}-recommendation-card` }>
             <img
-              src={ meal.strMealThumb }
-              alt={ meal.strMeal }
+              src={ drink.strDrinkThumb }
+              alt={ drink.strDrink }
               width="250px"
               height="250px"
             />
             <div data-testid={ `${index}-recommendation-title` }>
-              {meal.strMeal}
+              {drink.strDrink}
             </div>
           </div>
         </Carousel.Item>))}
@@ -24,6 +24,6 @@ export default function CarouselMeals({ filteredMeals }) {
   );
 }
 
-CarouselMeals.propTypes = {
-  filteredMeals: PropTypes.arrayOf({}).isRequired,
+CarouselDrinks.propTypes = {
+  filteredDrinks: PropTypes.arrayOf({}).isRequired,
 };
