@@ -87,14 +87,13 @@ function DrinkRevenueDetail({ id }) {
     const inProgress = {
       meals: {},
       drinks: {
-        [selectedRevenue[0].idDrink]: allIngredients,
+        [selectedRevenue[0].idDrink]: [],
       },
     };
     if (localStorage.getItem('inProgressRecipes') === null) {
       localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
     } else {
       const progressRevenues = JSON.parse(localStorage.getItem('inProgressRecipes'));
-      progressRevenues.drinks[selectedRevenue[0].idDrink] = allIngredients;
       localStorage.setItem('inProgressRecipes', JSON.stringify(progressRevenues));
     }
   }
@@ -152,7 +151,7 @@ function DrinkRevenueDetail({ id }) {
             <p data-testid="instructions">{revenue.strInstructions}</p>
           </div>
         ))}
-      <li data-testid='ingredientsList'>Ingredients:</li>
+      <li data-testid="ingredientsList">Ingredients:</li>
       {allIngredients
         && allIngredients.map((e, index) => (
           <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
