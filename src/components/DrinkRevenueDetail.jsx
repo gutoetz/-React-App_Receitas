@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import useFetchIdDrinks from '../helper/useFetchIdDrinks';
@@ -212,7 +212,7 @@ function DrinkRevenueDetail({ id }) {
 }
 
 DrinkRevenueDetail.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default DrinkRevenueDetail;

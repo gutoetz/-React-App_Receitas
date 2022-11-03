@@ -26,7 +26,7 @@ export default function CarouselDrinks({ filteredDrinks }) {
 }
 
 CarouselDrinks.propTypes = {
-  filteredDrinks: PropTypes.shape({
-    map: PropTypes.func.isRequired,
-  }).isRequired,
+  filteredDrinks: PropTypes.arrayOf(PropTypes.shape({
+    map: PropTypes.func,
+  })).isRequired,
 };
