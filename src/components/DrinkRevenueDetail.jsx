@@ -11,21 +11,18 @@ const copy = require('clipboard-copy');
 
 function DrinkRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
-  const [ingredient, setIngredient] = useState([]);
-  const [quantity, setQuantity] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
   // const [meals, setMeals] = useState([]);
   const [filteredMeals, setFilteredMeals] = useState([]);
   const [showCopied, setShowCopied] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  // const [startButton, setStartButton] = useState('Start Recipe');
 
   const history = useHistory();
 
   useFetchIdDrinks(id, setSelectedRevenue);
   console.log(selectedRevenue);
 
-  // useFetchRecommendMeals(setMeals);
+  useFetchRecommendMeals(setMeals);
 
   const getIngredients = useCallback(() => {
     if (selectedRevenue.length > 0) {
@@ -83,6 +80,8 @@ function DrinkRevenueDetail({ id }) {
 
   useEffect(() => showMeals(), [showMeals]);
 
+  useEffect(() => showMeals(), [meals]);
+
   function redirectStart() {
     history.push(`/drinks/${id}/in-progress`);
   }
@@ -131,7 +130,7 @@ function DrinkRevenueDetail({ id }) {
         && selectedRevenue.map((revenue) => (
           <div key={ revenue.strDrink }>
             <h3 data-testid="recipe-title">{revenue.strDrink}</h3>
-            <h4 data-testid="recipe-category">{revenue.strCategory}</h4>
+            <h4 data-testid="recipe-category">{revenue.strAlcoholic}</h4>
             <img
               src={ revenue.strDrinkThumb }
               alt="Selected Revenue"
@@ -156,7 +155,7 @@ function DrinkRevenueDetail({ id }) {
         onClick={ () => redirectStart() }
         className="recipeDetailsButton"
       >
-        {startButton}
+        {startButton ? ('Start Recipe') : ('Continue Recipe')}
       </button>
       <div>
         <button onClick={ shareRevenue } type="button" data-testid="share-btn">

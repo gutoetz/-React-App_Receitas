@@ -12,8 +12,6 @@ const copy = require('clipboard-copy');
 
 function MealRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
-  const [ingredient, setIngredient] = useState([]);
-  const [quantity, setQuantity] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [filteredDrinks, setFilteredDrinks] = useState([]);
@@ -75,7 +73,7 @@ function MealRevenueDetail({ id }) {
 
   const showIngredients = useCallback(() => {
     setAllIngredients(ingredient.map((e, i) => `${e}: ${quantity[i]}`));
-  }, [ingredient, quantity]);
+  }, []);
 
   useEffect(() => showIngredients(), [showIngredients]);
 
@@ -183,7 +181,7 @@ function MealRevenueDetail({ id }) {
         onClick={ () => redirectStart() }
         className="recipeDetailsButton"
       >
-        {startButton}
+        {startButton ? ('Start Recipe') : ('Continue Recipe')}
       </button>
       <div>
         <button onClick={ shareRevenue } type="button" data-testid="share-btn">

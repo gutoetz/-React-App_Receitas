@@ -18,7 +18,7 @@ export default function Drinks() {
               name="strDrink"
               index={ index }
               key={ index }
-              id={revenue.idDrink}
+              id={ revenue.idDrink }
             />
           ))
         )}

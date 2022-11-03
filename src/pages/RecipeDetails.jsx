@@ -1,35 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
 import MealRevenueDetail from '../components/MealRevenueDetail';
 import DrinkRevenueDetail from '../components/DrinkRevenueDetail';
 
-function RecipeDetails() {
-  const history = useHistory();
-  const [isDrink, setIsDrink] = useState(false);
-  const SEVEN = 7;
-  const EIGHT = 8;
-  const idMeals = history.location.pathname.slice(SEVEN);
-  const idDrinks = history.location.pathname.slice(EIGHT);
-
-  const showRevenues = useCallback(() => {
-    if (history.location.pathname.includes('meals')) {
-      setIsDrink(false);
-    } else {
-      setIsDrink(true);
-    }
-  }, [history.location.pathname]);
-
-  useEffect(() => showRevenues(), [showRevenues]);
+function RecipeDetails({ type }) {
+  const { id } = useParams();
 
   return (
     <div>
-      {isDrink === false ? (
-        <MealRevenueDetail id={ idMeals } />
+      {type === 'meals' ? (
+        <MealRevenueDetail id={ id } />
       ) : (
-        <DrinkRevenueDetail id={ idDrinks } />
+        <DrinkRevenueDetail id={ id } />
       )}
     </div>
   );
 }
+
+RecipeDetails.propTypes = {
+  type: PropTypes.string.isRequired,
+};
 
 export default RecipeDetails;
