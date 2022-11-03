@@ -1,99 +1,89 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-
 import useFetchIDMeals from '../helper/useFetchIDMeals';
 import useFetchRecommendDrinks from '../helper/useFetchRecommendDrinks';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import CarouselMeals from './CarouselMeals';
+import CarouselCard from './Carousel';
 
 const copy = require('clipboard-copy');
+
+const NUMBER_SIX = 6;
+const sliceIndex = 23;
 
 function MealRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [filteredDrinks, setFilteredDrinks] = useState([]);
+  const [startButton, setStartButton] = useState(true);
   const [showCopied, setShowCopied] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [embedURL, setEmbedURL] = useState('');
-  // const [startButton, setStartButton] = useState('Start Recipe');
 
   const history = useHistory();
 
   useFetchIDMeals(id, setSelectedRevenue);
   useFetchRecommendDrinks(setDrinks);
 
-  const embedVideo = useCallback(() => {
-    const indexForSliceUrl = 23;
+  const embedVideo = () => {
     if (selectedRevenue.length > 0) {
       const url = selectedRevenue[0].strYoutube;
-      const customURL = [
-        url.slice(0, indexForSliceUrl),
-        '/embed', url.slice(indexForSliceUrl),
-      ].join('');
+      const customURL = [url
+        .slice(0, sliceIndex), '/embed', url
+        .slice(sliceIndex)].join('');
       setEmbedURL(customURL);
     }
-  }, [selectedRevenue]);
+  };
 
-  useEffect(() => embedVideo(), [embedVideo]);
+  useEffect(() => embedVideo(), [selectedRevenue]);
 
-  const getIngredients = useCallback(() => {
-    if (selectedRevenue.length > 0) {
-      const filterIngredients = Object.values(selectedRevenue[0]);
-      const TWENTY_EIGHT = 28;
-      const NINE = 9;
-      const arrayIngredients = [];
-      for (let index = NINE; index <= TWENTY_EIGHT; index += 1) {
-        arrayIngredients.push(filterIngredients[index]);
-      }
-      setAllIngredients(arrayIngredients.filter((e) => e));
-      setIngredient(allIngredients);
+  const getInprogress = () => {
+    if (localStorage.getItem('inProgressRecipes') !== null) {
+      const continueRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const newData = Object.keys(continueRecipes.meals);
+      const haveRecipe = newData.some((e) => e === id);
+      setStartButton(!haveRecipe);
     }
-  }, [allIngredients, selectedRevenue]);
+  };
 
-  useEffect(() => getIngredients(), [getIngredients]);
+  useEffect(() => getInprogress(), []);
 
-  const getQuantity = useCallback(() => {
+  const getIngredients = () => {
     if (selectedRevenue.length > 0) {
-      const filterQuantity = Object.values(selectedRevenue[0]);
-      const arrayQuantity = [];
-      const FORTY_EIGHT = 48;
-      const TWENTY_NINE = 29;
-      for (let index = TWENTY_NINE; index <= FORTY_EIGHT; index += 1) {
-        arrayQuantity.push(filterQuantity[index]);
-      }
-      const allQuantity = arrayQuantity.filter((e) => e);
-      setQuantity(allQuantity);
+      const filterIngredients = Object
+        .entries(selectedRevenue[0]);
+      const nullEntries = filterIngredients
+        .filter((e) => e[0].includes('strIngredient'))
+        .filter((i) => i[1] !== null && i[1] !== '');
+      const nullQuantity = filterIngredients
+        .filter((e) => e[0].includes('strMeasure'))
+        .filter((i) => i[1] !== null && i[1] !== '');
+      setAllIngredients(nullEntries
+        .map((e, i) => `${e[1]}: ${nullQuantity[i][1]}`));
     }
-  }, [selectedRevenue]);
+  };
 
-  useEffect(() => getQuantity(), [getQuantity]);
+  useEffect(() => getIngredients(), [selectedRevenue]);
 
-  const showIngredients = useCallback(() => {
-    setAllIngredients(ingredient.map((e, i) => `${e}: ${quantity[i]}`));
-  }, []);
-
-  useEffect(() => showIngredients(), [showIngredients]);
-
-  const verifyFavorite = useCallback(() => {
+  const verifyFavorite = () => {
     if (localStorage.getItem('favoriteRecipes') !== null) {
       const allFavorites = JSON.parse(localStorage.getItem('favoriteRecipes'));
       const haveFavorite = allFavorites.some((e) => e.id === id);
       setIsFavorite(haveFavorite);
     }
-  }, [id]);
+  };
 
-  useEffect(() => verifyFavorite(), [verifyFavorite]);
+  useEffect(() => verifyFavorite(), []);
 
-  const showDrinks = useCallback(() => {
-    const SIX = 6;
-    const selectedDrinks = drinks.slice(null, SIX);
+  const showDrinks = () => {
+    const selectedDrinks = drinks.slice(null, NUMBER_SIX);
     setFilteredDrinks(selectedDrinks);
-  }, [drinks]);
+  };
 
-  useEffect(() => showDrinks(), [showDrinks]);
+  useEffect(() => showDrinks(), [drinks]);
 
   function redirectStart() {
     history.push(`/meals/${id}/in-progress`);
@@ -103,6 +93,27 @@ function MealRevenueDetail({ id }) {
     const copyUrl = `http://localhost:3000/meals/${id}`;
     copy(copyUrl);
     setShowCopied(true);
+  }
+
+  function inProgressRevenue() {
+    const inProgress = {
+      drinks: {},
+      meals: {
+        [selectedRevenue[0].idMeal]: allIngredients,
+      },
+    };
+    if (localStorage.getItem('inProgressRecipes') === null) {
+      localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
+    } else {
+      const progressRevenues = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      progressRevenues.meals[selectedRevenue[0].idMeal] = allIngredients;
+      localStorage.setItem('inProgressRecipes', JSON.stringify(progressRevenues));
+    }
+  }
+
+  function handleStartButton() {
+    inProgressRevenue();
+    redirectStart();
   }
 
   function showFavorite() {
@@ -158,8 +169,12 @@ function MealRevenueDetail({ id }) {
                 src={ embedURL }
                 title="YouTube video player"
                 frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write;
-                  encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer;
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                yroscope;
+                picture-in-picture"
                 data-testid="video"
                 allowFullScreen
               />
@@ -174,37 +189,41 @@ function MealRevenueDetail({ id }) {
           </ul>
         ))}
       <h4>Recommended Drinks</h4>
-      {filteredDrinks && <CarouselMeals filteredDrinks={ filteredDrinks } />}
+      {filteredDrinks && <CarouselCard filteredDrinks={ filteredDrinks } />}
       <button
         data-testid="start-recipe-btn"
         type="button"
-        onClick={ () => redirectStart() }
+        onClick={ () => handleStartButton() }
         className="recipeDetailsButton"
       >
         {startButton ? ('Start Recipe') : ('Continue Recipe')}
       </button>
       <div>
-        <button onClick={ shareRevenue } type="button" data-testid="share-btn">
+        <button
+          onClick={ shareRevenue }
+          type="button"
+          data-testid="share-btn"
+        >
           <img src={ shareIcon } alt="shareIcon" />
         </button>
         {showCopied && <span>Link copied!</span>}
       </div>
       <div>
         {isFavorite === false ? (
-          <button
-            type="button"
-            onClick={ () => showFavorite() }
-            data-testid="favorite-btn"
-          >
-            <img src={ whiteHeartIcon } alt="White Heart Icon" />
+          <button onClick={ () => showFavorite() } type="button">
+            <img
+              src={ whiteHeartIcon }
+              alt="White Heart Icon"
+              data-testid="favorite-btn"
+            />
           </button>
         ) : (
-          <button
-            type="button"
-            onClick={ () => showFavorite() }
-            data-testid="favorite-btn"
-          >
-            <img src={ blackHeartIcon } alt="Black Heart Icon" />
+          <button onClick={ () => showFavorite() } type="button">
+            <img
+              src={ blackHeartIcon }
+              alt="Black Heart Icon"
+              data-testid="favorite-btn"
+            />
           </button>
         )}
       </div>
@@ -213,7 +232,7 @@ function MealRevenueDetail({ id }) {
 }
 
 MealRevenueDetail.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 };
 
 export default MealRevenueDetail;

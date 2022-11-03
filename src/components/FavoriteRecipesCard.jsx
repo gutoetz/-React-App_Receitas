@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
-// import { Link, useHistory } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import GlobalContext from '../context/GlobalContext';
 import shareIcon from '../images/shareIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
-function DoneRecipesCard(infos) {
-  const { index, recipes: { type, nationality, tags, image, name,
-    category, doneDate, alcoholicOrNot, id } } = infos;
+function FavoriteRecipesCard(infos) {
+  const { favoriteRecipes, setFavoriteRecipes } = useContext(GlobalContext);
+  const { index, recipes: { type, nationality, image, name,
+    category, alcoholicOrNot, id } } = infos;
   const [copied, setCopied] = useState(false);
 
   const copyToClipBoard = () => {
     navigator.clipboard.writeText(`http://localhost:3000/meals/${id}`);
     setCopied(true);
   };
-  // const history = useHistory();
+
+  const deleteFavorite = (favoriteId) => {
+    const newList = favoriteRecipes
+      .filter(({ id: filterID }) => filterID !== favoriteId);
+    localStorage.setItem('favoriteRecipes', JSON.stringify(newList));
+    setFavoriteRecipes(newList);
+  };
+
   return (
     <div>
       <Link to={ `/${type}s/${id}` }>
@@ -21,9 +30,6 @@ function DoneRecipesCard(infos) {
       <h6 data-testid={ `${index}-horizontal-top-text` }>{type}</h6>
       <p data-testid={ `${index}-horizontal-top-text` }>
         {`${nationality} - ${category}`}
-      </p>
-      <p data-testid={ `${index}-horizontal-done-date` }>
-        {doneDate}
       </p>
       {
         alcoholicOrNot && (
@@ -42,6 +48,14 @@ function DoneRecipesCard(infos) {
       </Link>
 
       <img
+        src={ blackHeartIcon }
+        alt="Favorite Button"
+        data-testid={ `${index}-horizontal-favorite-btn` }
+        onClick={ () => deleteFavorite(id) }
+        aria-hidden="true"
+      />
+
+      <img
         src={ shareIcon }
         alt="Share Button"
         data-testid={ `${index}-horizontal-share-btn` }
@@ -49,20 +63,9 @@ function DoneRecipesCard(infos) {
         aria-hidden="true"
       />
       {copied && <p>Link copied!</p>}
-      {
-        tags && tags.map((tagName) => (
-          <p
-            key={ tagName }
-            data-testid={ `${index}-${tagName}-horizontal-tag` }
-          >
-            {tagName}
-          </p>
-        ))
-      }
-
     </div>
 
   );
 }
 
-export default DoneRecipesCard;
+export default FavoriteRecipesCard;

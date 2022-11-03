@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import useFetchIdDrinks from '../helper/useFetchIdDrinks';
-// import useFetchRecommendMeals from '../helper/useFetchRecommendMeals';
+import useFetchRecommendMeals from '../helper/useFetchRecommendMeals';
 import shareIcon from '../images/shareIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
@@ -9,76 +10,66 @@ import CarouselMeals from './CarouselMeals';
 
 const copy = require('clipboard-copy');
 
+const NUMBER_SIX = 6;
+
 function DrinkRevenueDetail({ id }) {
   const [selectedRevenue, setSelectedRevenue] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
-  // const [meals, setMeals] = useState([]);
+  const [meals, setMeals] = useState([]);
   const [filteredMeals, setFilteredMeals] = useState([]);
+  const [startButton, setStartButton] = useState(true);
   const [showCopied, setShowCopied] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
   const history = useHistory();
 
   useFetchIdDrinks(id, setSelectedRevenue);
-  console.log(selectedRevenue);
 
   useFetchRecommendMeals(setMeals);
 
-  const getIngredients = useCallback(() => {
-    if (selectedRevenue.length > 0) {
-      const filterIngredients = Object.values(selectedRevenue[0]);
-      const SEVENTEEN = 17;
-      const THIRTY_ONE = 31;
-      const arrayIngredients = [];
-      for (let index = SEVENTEEN; index <= THIRTY_ONE; index += 1) {
-        arrayIngredients.push(filterIngredients[index]);
-      }
-      setAllIngredients(arrayIngredients.filter((e) => e));
-      setIngredient(allIngredients);
+  const getInprogress = () => {
+    if (localStorage.getItem('inProgressRecipes') !== null) {
+      const continueRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const newData = Object.keys(continueRecipes.drinks);
+      const haveRecipe = newData.some((e) => e === id);
+      setStartButton(!haveRecipe);
     }
-  }, [selectedRevenue, allIngredients]);
+  };
 
-  useEffect(() => getIngredients(), [getIngredients]);
+  useEffect(() => getInprogress(), []);
 
-  const getQuantity = useCallback(() => {
+  const getIngredients = () => {
     if (selectedRevenue.length > 0) {
-      const filterQuantity = Object.values(selectedRevenue[0]);
-      const THIRTY_TWO = 32;
-      const FORTY_SIX = 46;
-      const arrayQuantity = [];
-      for (let index = THIRTY_TWO; index <= FORTY_SIX; index += 1) {
-        arrayQuantity.push(filterQuantity[index]);
-      }
-      const allQuantity = arrayQuantity.filter((e) => e);
-      setQuantity(allQuantity);
+      const filterIngredients = Object.entries(selectedRevenue[0]);
+      const nullEntries = filterIngredients
+        .filter((e) => e[0].includes('strIngredient'))
+        .filter((i) => i[1] !== null);
+      const nullQuantity = filterIngredients
+        .filter((e) => e[0].includes('strMeasure'))
+        .filter((i) => i[1] !== null);
+      setAllIngredients(nullEntries.map((e, i) => {
+        const quantity = nullQuantity[i] ? (`: ${nullQuantity[i][1]}`) : '';
+        return `${e[1]}${quantity}`;
+      }));
     }
-  }, [selectedRevenue]);
+  };
 
-  useEffect(() => getQuantity(), [getQuantity]);
+  useEffect(() => getIngredients(), [selectedRevenue]);
 
-  const showIngredients = useCallback(() => {
-    setAllIngredients(ingredient.map((e, i) => `${e}: ${quantity[i]}`));
-  }, [ingredient, quantity]);
-
-  useEffect(() => showIngredients(), [showIngredients]);
-
-  const verifyFavorite = useCallback(() => {
+  const verifyFavorite = () => {
     if (localStorage.getItem('favoriteRecipes') !== null) {
       const allFavorites = JSON.parse(localStorage.getItem('favoriteRecipes'));
       const haveFavorite = allFavorites.some((e) => e.id === id);
       setIsFavorite(haveFavorite);
     }
-  }, [id]);
+  };
 
-  useEffect(() => verifyFavorite(), [verifyFavorite]);
+  useEffect(() => verifyFavorite(), []);
 
-  const showMeals = useCallback(() => {
-    const SIX = 6;
-    const selectedMeals = meals.slice(null, SIX);
+  const showMeals = () => {
+    const selectedMeals = meals.slice(null, NUMBER_SIX);
     setFilteredMeals(selectedMeals);
-  }, []);
-
-  useEffect(() => showMeals(), [showMeals]);
+  };
 
   useEffect(() => showMeals(), [meals]);
 
@@ -90,6 +81,27 @@ function DrinkRevenueDetail({ id }) {
     const copyUrl = `http://localhost:3000/drinks/${id}`;
     copy(copyUrl);
     setShowCopied(true);
+  }
+
+  function inProgressRevenue() {
+    const inProgress = {
+      meals: {},
+      drinks: {
+        [selectedRevenue[0].idDrink]: allIngredients,
+      },
+    };
+    if (localStorage.getItem('inProgressRecipes') === null) {
+      localStorage.setItem('inProgressRecipes', JSON.stringify(inProgress));
+    } else {
+      const progressRevenues = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      progressRevenues.drinks[selectedRevenue[0].idDrink] = allIngredients;
+      localStorage.setItem('inProgressRecipes', JSON.stringify(progressRevenues));
+    }
+  }
+
+  function handleStartButton() {
+    inProgressRevenue();
+    redirectStart();
   }
 
   function showFavorite() {
@@ -152,7 +164,7 @@ function DrinkRevenueDetail({ id }) {
       <button
         data-testid="start-recipe-btn"
         type="button"
-        onClick={ () => redirectStart() }
+        onClick={ () => handleStartButton() }
         className="recipeDetailsButton"
       >
         {startButton ? ('Start Recipe') : ('Continue Recipe')}
@@ -165,20 +177,20 @@ function DrinkRevenueDetail({ id }) {
       </div>
       <div>
         {isFavorite === false ? (
-          <button
-            type="button"
-            onClick={ () => showFavorite() }
-            data-testid="favorite-btn"
-          >
-            <img src={ whiteHeartIcon } alt="White Heart Icon" />
+          <button onClick={ () => showFavorite() } type="button">
+            <img
+              src={ whiteHeartIcon }
+              alt="White Heart Icon"
+              data-testid="favorite-btn"
+            />
           </button>
         ) : (
-          <button
-            type="button"
-            onClick={ () => showFavorite() }
-            data-testid="favorite-btn"
-          >
-            <img src={ blackHeartIcon } alt="Black Heart Icon" />
+          <button onClick={ () => showFavorite() } type="button">
+            <img
+              src={ blackHeartIcon }
+              alt="Black Heart Icon"
+              data-testid="favorite-btn"
+            />
           </button>
         )}
       </div>
@@ -187,7 +199,7 @@ function DrinkRevenueDetail({ id }) {
 }
 
 DrinkRevenueDetail.propTypes = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 };
 
 export default DrinkRevenueDetail;

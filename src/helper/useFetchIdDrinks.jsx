@@ -10,5 +10,5 @@ export default function useFetchIdDrinks(id, setData) {
       setData(response.drinks);
     }
     fetchData();
-  }, [id, setData]);
+  }, []);
 }

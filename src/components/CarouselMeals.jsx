@@ -11,9 +11,9 @@ export default function CarouselMeals({ filteredMeals }) {
           <div data-testid={ `${index}-recommendation-card` }>
             <img
               src={ meal.strMealThumb }
-              alt={ meal.strMeal }
               width="250px"
               height="250px"
+              alt="Recommended Meal"
             />
             <div data-testid={ `${index}-recommendation-title` }>
               {meal.strMeal}

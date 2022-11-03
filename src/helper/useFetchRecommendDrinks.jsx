@@ -11,5 +11,5 @@ export default function useFetchRecommendDrinks(setData) {
       setData(response.drinks);
     }
     fetchData();
-  }, [setData]);
+  }, []);
 }

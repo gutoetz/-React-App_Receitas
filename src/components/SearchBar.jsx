@@ -1,17 +1,32 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
-
+import React, { useContext, useState } from 'react';
 import GlobalContext from '../context/GlobalContext';
 
-function SearchBar({ pageTitle }) {
-  const {
-    selectSearchType,
-    handleSearchType,
-    handleSearchInput } = useContext(GlobalContext);
+function SearchBar() {
+  const [searchType, setSearchType] = useState('Name');
+  const [searchInput, setSearchInput] = useState('');
+
+  const { setSearching } = useContext(GlobalContext);
+
+  const selectSearchType = ({ target: { id } }) => {
+    setSearchType(id);
+  };
+
+  const handleSearchInput = ({ target: { value } }) => {
+    if (searchType === 'First Letter' && value.length > 1) {
+      global.alert('Your search must have only 1 (one) character');
+    }
+    setSearchInput(value);
+  };
+
+  const handleSearchType = () => {
+    setSearching({
+      search: true,
+      parameters: [searchType, searchInput],
+    });
+  };
 
   return (
     <form>
-
       <input type="text" data-testid="search-input" onChange={ handleSearchInput } />
 
       <label htmlFor="Ingredient">
@@ -50,7 +65,7 @@ function SearchBar({ pageTitle }) {
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ () => handleSearchType(pageTitle) }
+        onClick={ () => handleSearchType() }
       >
         Search
       </button>
@@ -58,9 +73,5 @@ function SearchBar({ pageTitle }) {
     </form>
   );
 }
-
-SearchBar.propTypes = {
-  pageTitle: PropTypes.string.isRequired,
-};
 
 export default SearchBar;

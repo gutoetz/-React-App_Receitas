@@ -11,5 +11,5 @@ export default function useFetchIDMeals(id, setData) {
       setData(response.meals);
     }
     fetchData();
-  }, [id, setData]);
+  }, []);
 }
