@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import MenuButton from '../components/MenuButton';
 
 export default function Profile() {
   const history = useHistory();
@@ -21,31 +22,28 @@ export default function Profile() {
 
       <p data-testid="profile-email">{ email }</p>
 
-      <div className="profile-menu">
-        <button
+      <menu className="profile-menu">
+        <MenuButton
           type="button"
           data-testid="profile-done-btn"
           onClick={ () => history.push('/done-recipes') }
-        >
-          Done Recipes
-        </button>
+          textButton="Done Recipes"
+        />
 
-        <button
+        <MenuButton
           type="button"
           data-testid="profile-favorite-btn"
           onClick={ () => history.push('/favorite-recipes') }
-        >
-          Favorite Recipes
-        </button>
+          textButton="Favorite Recipes"
+        />
 
-        <button
+        <MenuButton
           type="button"
           data-testid="profile-logout-btn"
           onClick={ logout }
-        >
-          Logout
-        </button>
-      </div>
+          textButton="Logout"
+        />
+      </menu>
 
       <Footer />
     </div>

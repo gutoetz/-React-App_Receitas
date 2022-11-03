@@ -1,6 +1,7 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import Carousel from 'react-bootstrap/Carousel';
-import React from 'react';
+
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default function CarouselMeals({ filteredMeals }) {
@@ -11,9 +12,9 @@ export default function CarouselMeals({ filteredMeals }) {
           <div data-testid={ `${index}-recommendation-card` }>
             <img
               src={ meal.strMealThumb }
+              alt={ meal.strMeal }
               width="250px"
               height="250px"
-              alt="Recommended Meal"
             />
             <div data-testid={ `${index}-recommendation-title` }>
               {meal.strMeal}

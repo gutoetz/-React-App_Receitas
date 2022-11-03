@@ -3,6 +3,7 @@ import Header from '../components/Header';
 
 import FavoriteRecipesCard from '../components/FavoriteRecipesCard';
 import GlobalContext from '../context/GlobalContext';
+import MenuButton from '../components/MenuButton';
 
 export default function FavoriteRecipes() {
   // States
@@ -29,36 +30,36 @@ export default function FavoriteRecipes() {
   return (
     <div>
       <Header title="Favorite Recipes" />
-      <div>
-        <button
-          type="button"
-          data-testid="filter-by-all-btn"
+      <menu>
+        <MenuButton
+          id="filter-by-all-btn"
           value="all"
           onClick={ handleFilter }
-        >
-          All
-        </button>
-        <button
-          type="button"
-          data-testid="filter-by-meal-btn"
+          textButton="All"
+        />
+
+        <MenuButton
+          id="filter-by-meal-btn"
           value="meal"
           onClick={ handleFilter }
-        >
-          Meals
-        </button>
-        <button
-          type="button"
-          data-testid="filter-by-drink-btn"
+          textButton="Meals"
+        />
+        <MenuButton
+          id="filter-by-drink-btn"
           value="drink"
           onClick={ handleFilter }
-        >
-          Drinks
-        </button>
-      </div>
+          textButton="Drinks"
+        />
+      </menu>
+
       <div data-testid="favorite-recipes-container">
-        {favoriteRecipes && favoriteRecipes.map((recipes, index) => (
-          <FavoriteRecipesCard key={ index } recipes={ recipes } index={ index } />
-        ))}
+        { favoriteRecipes && favoriteRecipes.map((recipes, index) => (
+          <FavoriteRecipesCard
+            key={ index }
+            recipes={ recipes }
+            index={ index }
+          />
+        )) }
       </div>
     </div>
   );

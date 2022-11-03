@@ -1,12 +1,13 @@
-import PropTypes from 'prop-types';
 import React, { useState, useEffect, useContext, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+
 import GlobalContext from '../context/GlobalContext';
 import RecipesCard from './Recipes';
+import MenuButton from './MenuButton';
 
 function BodyRecipes({ title }) {
-  const history = useHistory();
-  // States
+  // State
 
   const [revenues, setRevenues] = useState([]);
   const [defaultRevenues, setDefaultRevenues] = useState([]);
@@ -15,6 +16,7 @@ function BodyRecipes({ title }) {
 
   // consts Auxiliares
 
+  const history = useHistory();
   const { setSearching, searching } = useContext(GlobalContext);
   const MAX_RENDER = 12;
   const MAX_CATEGORYS = 5;
@@ -112,28 +114,23 @@ function BodyRecipes({ title }) {
 
   return (
     <div>
-      <section>
-        {categorys && categorys.map((category, index) => (
-          <button
+      <menu>
+        { categorys && categorys.map((category, index) => (
+          <MenuButton
             key={ index }
-            type="button"
-            data-testid={ `${category.strCategory}-category-filter` }
+            id={ `${category.strCategory}-category-filter` }
             onClick={ () => handleCategory(category.strCategory) }
-          >
-            {category.strCategory}
-          </button>
-        ))}
-        <button
-          type="button"
-          data-testid="All-category-filter"
+            textButton={ category.strCategory }
+          />
+        )) }
+        <MenuButton
+          id="All-category-filter"
           onClick={ () => handleCategoryAll() }
-        >
-          All
-        </button>
-      </section>
-
-      {revenues && (
-        revenues.map((revenue, index) => (
+          textButton="All"
+        />
+      </menu>
+      <section>
+        { revenues && revenues.map((revenue, index) => (
           <RecipesCard
             title={ title.toLowerCase() }
             idRoute={ idRoute }
@@ -143,14 +140,14 @@ function BodyRecipes({ title }) {
             index={ index }
             key={ index }
           />
-        ))
-      )}
+        )) }
+      </section>
     </div>
   );
 }
 
 BodyRecipes.propTypes = {
   title: PropTypes.string.isRequired,
-};
 
+};
 export default BodyRecipes;

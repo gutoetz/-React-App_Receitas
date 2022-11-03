@@ -8,13 +8,9 @@ function RecipeDetails({ type }) {
   const { id } = useParams();
 
   return (
-    <div>
-      {type === 'meals' ? (
-        <MealRevenueDetail id={ id } />
-      ) : (
-        <DrinkRevenueDetail id={ id } />
-      )}
-    </div>
+    type === 'meals'
+      ? <MealRevenueDetail id={ id } />
+      : <DrinkRevenueDetail id={ id } />
   );
 }
 

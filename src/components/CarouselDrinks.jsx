@@ -1,6 +1,7 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import Carousel from 'react-bootstrap/Carousel';
-import React from 'react';
+
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default function CarouselDrinks({ filteredDrinks }) {
@@ -25,5 +26,7 @@ export default function CarouselDrinks({ filteredDrinks }) {
 }
 
 CarouselDrinks.propTypes = {
-  filteredDrinks: PropTypes.arrayOf({}).isRequired,
+  filteredDrinks: PropTypes.shape({
+    map: PropTypes.func.isRequired,
+  }).isRequired,
 };
