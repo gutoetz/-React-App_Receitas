@@ -10,6 +10,7 @@
   width: 100%;
 }
 
+<<<<<<< Updated upstream
 .rocksGlass {
   animation: shake 1s infinite ease;
   max-height: 80vh;
@@ -45,38 +46,18 @@
   font-weight: 900;
 }
 
+=======
+>>>>>>> Stashed changes
 .recipeDetailsButton {
   bottom: 0;
   margin-left: 200px;
   position: fixed;
 }
 
-@keyframes shake {
-
-  0% {
-    transform: rotate(5deg);
-  }
-
-  50% {
-    transform: rotate(-5deg);
-  }
-
-  100% {
-    transform: rotate(5deg);
-  }
-}
-
-@keyframes clink {
-
-  0% {
-    transform: rotate(-10deg);
-  }
-
-  50% {
-    transform: rotate(20deg);
-  }
-
-  100% {
-    transform: rotate(-10deg);
-  }
+menu {
+  list-style-type: none;
+  display: flex;
+  padding: 0;
+  margin-bottom: 0;
+  gap: 1em;
 }
