@@ -2,9 +2,10 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
+import { Paper } from '@mui/material';
 import GlobalContext from '../context/GlobalContext';
-import RecipesCard from './Recipes';
-import MenuButton from './MenuButton';
+import RecipesCard from './RecipesCard';
+import BodyMenu from './BodyMenu';
 
 function BodyRecipes({ title }) {
   // State
@@ -114,32 +115,28 @@ function BodyRecipes({ title }) {
 
   return (
     <div>
-      <menu>
-        { categorys && categorys.map((category, index) => (
-          <MenuButton
-            key={ index }
-            id={ `${category.strCategory}-category-filter` }
-            onClick={ () => handleCategory(category.strCategory) }
-            textButton={ category.strCategory }
-          />
-        )) }
-        <MenuButton
-          id="All-category-filter"
-          onClick={ () => handleCategoryAll() }
-          textButton="All"
-        />
-      </menu>
+      <BodyMenu
+        categorys={ categorys }
+        handleCategory={ handleCategory }
+        handleCategoryAll={ handleCategoryAll }
+      />
+
       <section>
         { revenues && revenues.map((revenue, index) => (
-          <RecipesCard
-            title={ title.toLowerCase() }
-            idRoute={ idRoute }
-            cardInfo={ revenue }
-            type={ `str${pageName}Thumb` }
-            name={ `str${pageName}` }
-            index={ index }
+          <Paper
             key={ index }
-          />
+            elevation={ 3 }
+            sx={ { my: 1, mx: 'auto', maxWidth: 360 } }
+          >
+            <RecipesCard
+              title={ title.toLowerCase() }
+              idRoute={ idRoute }
+              cardInfo={ revenue }
+              type={ `str${pageName}Thumb` }
+              name={ `str${pageName}` }
+              index={ index }
+            />
+          </Paper>
         )) }
       </section>
     </div>
@@ -148,6 +145,6 @@ function BodyRecipes({ title }) {
 
 BodyRecipes.propTypes = {
   title: PropTypes.string.isRequired,
-
 };
+
 export default BodyRecipes;
