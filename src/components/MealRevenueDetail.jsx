@@ -1,6 +1,8 @@
+/* eslint-disable max-lines */
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Box, Button, ButtonGroup, CardMedia, Paper, Typography } from '@mui/material';
 import useFetchIDMeals from '../helper/useFetchIDMeals';
 import useFetchRecommendDrinks from '../helper/useFetchRecommendDrinks';
 import shareIcon from '../images/shareIcon.svg';
@@ -148,26 +150,67 @@ function MealRevenueDetail({ id }) {
   }
 
   return (
-    <div>
+    <Paper
+      sx={ {
+        mb: 0.5,
+        mx: 'auto',
+        maxWidth: 360,
+        textAlign: 'center',
+        p: 0.5,
+        backgroundColor: '#870000',
+        opacity: 100,
+      } }
+    >
       { selectedRevenue && selectedRevenue.map((revenue) => (
-        <div key={ revenue.strMeal }>
-          <h3 data-testid="recipe-title">{revenue.strMeal}</h3>
+        <Box key={ revenue.strMeal } flexDirection="column" alignSelf="space-evenly">
+          <Typography component="h3" variant="h3" data-testid="recipe-title">
+            {revenue.strMeal}
+          </Typography>
 
-          <h4 data-testid="recipe-category">{revenue.strCategory}</h4>
+          <Typography component="h4" variant="h4" data-testid="recipe-ticategorytle">
+            {revenue.strCategory}
+          </Typography>
 
-          <img
-            src={ revenue.strMealThumb }
-            alt="Selected Revenue"
+          <CardMedia
+            component="img"
+            height="140"
+            image={ revenue.strMealThumb }
+            alt={ revenue.strMeal }
             data-testid="recipe-photo"
-            width="150px"
+            fullWidth
+            sx={ { my: 1 } }
           />
 
-          <p data-testid="instructions">{revenue.strInstructions}</p>
+          <Paper
+            elevation={ 24 }
+            variant="outlined"
+            sx={ { mx: 1,
+              px: 0.5,
+              my: 2,
+              textAlign: 'justify',
+              backgroundColor: '#fbe9e7',
+            } }
+          >
+            <Typography
+              component="h5"
+              variant="h5"
+              data-testid="recipe-ticategorytle"
+              sx={ { mt: 1.5, mb: 1, textAlign: 'center' } }
+            >
+              Instructions
+            </Typography>
+
+            <Typography
+              variant="body1"
+              gutterBottom
+              data-testid="instructions"
+            >
+              {revenue.strInstructions}
+            </Typography>
+          </Paper>
 
           { revenue.strYoutube && (
             <iframe
-              width="560"
-              height="315"
               src={ embedURL }
               title="YouTube video player"
               frameBorder="0"
@@ -177,11 +220,18 @@ function MealRevenueDetail({ id }) {
               allowFullScreen
             />
           ) }
-        </div>
+        </Box>
       )) }
 
-      <ul>
-        Ingredients:
+      <ul style={ { listStyleType: 'none' } }>
+        <Typography
+          component="h5"
+          variant="h5"
+          data-testid="recipe-ticategorytle"
+          sx={ { mt: 1.5, mb: 1 } }
+        >
+          Ingredients
+        </Typography>
 
         { allIngredients && allIngredients.map((e, index) => (
           <li key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
@@ -191,52 +241,73 @@ function MealRevenueDetail({ id }) {
       </ul>
 
       <div>
-        <h4>Recommended Drinks</h4>
+        <Typography
+          component="h5"
+          variant="h5"
+          data-testid="recipe-ticategorytle"
+          sx={ { mt: 1.5, mb: 1 } }
+        >
+          Recommended Drinks
+        </Typography>
 
         { filteredDrinks && <CarouselDrinks filteredDrinks={ filteredDrinks } /> }
       </div>
 
-      <button
-        data-testid="start-recipe-btn"
-        type="button"
-        onClick={ () => handleStartButton() }
-        className="recipeDetailsButton"
+      <ButtonGroup
+        size="large"
+        orientation="vertical"
+        aria-label="vertical contained button group"
+        fullWidth
+        color="secondary"
+        sx={ {
+          mt: 2,
+          maxWidth: 360,
+        } }
       >
-        {startButton ? ('Start Recipe') : ('Continue Recipe')}
-      </button>
-
-      <div>
-        <button
-          onClick={ shareRevenue }
-          type="button"
-          data-testid="share-btn"
+        <Button
+          variant="contained"
+          data-testid="start-recipe-btn"
+          onClick={ () => handleStartButton() }
+          className="recipeDetailsButton"
         >
-          <img src={ shareIcon } alt="shareIcon" />
-        </button>
+          {startButton ? ('Start Recipe') : ('Continue Recipe')}
+        </Button>
 
-        {showCopied && <span>Link copied!</span>}
-      </div>
-
-      <div>
         { isFavorite === false ? (
-          <button onClick={ () => showFavorite() } type="button">
+          <Button
+            variant="contained"
+            onClick={ () => showFavorite() }
+          >
             <img
               src={ whiteHeartIcon }
               alt="White Heart Icon"
               data-testid="favorite-btn"
             />
-          </button>
+          </Button>
         ) : (
-          <button onClick={ () => showFavorite() } type="button">
+          <Button
+            onClick={ () => showFavorite() }
+            variant="contained"
+          >
             <img
               src={ blackHeartIcon }
               alt="Black Heart Icon"
               data-testid="favorite-btn"
             />
-          </button>
+          </Button>
         ) }
-      </div>
-    </div>
+        <Button
+          variant="contained"
+          data-testid="share-btn"
+          fullWidth
+          onClick={ () => shareRevenue() }
+        >
+          <img src={ shareIcon } alt="shareIcon" />
+        </Button>
+
+        {showCopied && <span>Link copied!</span>}
+      </ButtonGroup>
+    </Paper>
   );
 }
 
