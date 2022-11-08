@@ -1,4 +1,4 @@
-import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, IconButton, Paper } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LocalBarRoundedIcon from '@mui/icons-material/LocalBarRounded';
@@ -20,18 +20,41 @@ function Footer() {
       >
         <BottomNavigation
           showLabels
-          sx={ { justifyContent: 'space-evenly', backgroundColor: 'primary.main' } }
+          sx={ {
+            justifyContent: 'space-evenly',
+            backgroundColor: 'primary.main',
+            alignContent: 'center',
+          } }
         >
           <Link to="/drinks">
             <BottomNavigationAction
               label="Drinks"
-              icon={ <LocalBarRoundedIcon sx={ { color: 'white' } } /> }
+              icon={
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="Drinks"
+                  color="inherit"
+                >
+                  <LocalBarRoundedIcon sx={ { color: 'white' } } />
+                </IconButton>
+              }
             />
           </Link>
+
           <Link to="/meals">
             <BottomNavigationAction
               label="Meals"
-              icon={ <LunchDiningRoundedIcon sx={ { color: 'white' } } /> }
+              icon={
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="Meals"
+                  color="inherit"
+                >
+                  <LunchDiningRoundedIcon sx={ { color: 'white' } } />
+                </IconButton>
+              }
             />
           </Link>
         </BottomNavigation>

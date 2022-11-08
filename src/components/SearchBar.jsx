@@ -1,62 +1,21 @@
 import React, { useContext, useState } from 'react';
-
-// import { styled, alpha } from '@mui/material/styles';
-// import InputBase from '@mui/material/InputBase';
+import { Backdrop, Button, CircularProgress, FormControlLabel, Radio,
+  RadioGroup, TextField } from '@mui/material';
 
 import GlobalContext from '../context/GlobalContext';
-
-// const Search = styled('div')(({ theme }) => ({
-//   position: 'relative',
-//   borderRadius: theme.shape.borderRadius,
-//   backgroundColor: alpha(theme.palette.common.white, 0.15),
-//   '&:hover': {
-//     backgroundColor: alpha(theme.palette.common.white, 0.25),
-//   },
-//   marginRight: theme.spacing(2),
-//   marginLeft: 0,
-//   width: '100%',
-//   [theme.breakpoints.up('sm')]: {
-//     marginLeft: theme.spacing(3),
-//     width: 'auto',
-//   },
-// }));
-
-// const SearchIconWrapper = styled('div')(({ theme }) => ({
-//   padding: theme.spacing(0, 2),
-//   height: '100%',
-//   position: 'absolute',
-//   pointerEvents: 'none',
-//   display: 'flex',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-// }));
-
-// const StyledInputBase = styled(InputBase)(({ theme }) => ({
-//   color: 'inherit',
-//   '& .MuiInputBase-input': {
-//     padding: theme.spacing(1, 1, 1, 0),
-//     // vertical padding + font size from searchIcon
-//     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-//     transition: theme.transitions.create('width'),
-//     width: '100%',
-//     [theme.breakpoints.up('md')]: {
-//       width: '20ch',
-//     },
-//   },
-// }));
 
 function SearchBar() {
   const [searchType, setSearchType] = useState('Name');
   const [searchInput, setSearchInput] = useState('');
 
-  const { setSearching } = useContext(GlobalContext);
+  const { loading, setLoading, setSearching } = useContext(GlobalContext);
 
   const selectSearchType = ({ target: { id } }) => {
     setSearchType(id);
   };
 
   const handleSearchInput = ({ target: { value } }) => {
-    if (searchType === 'First Letter' && value.length > 1) {
+    if (searchType === 'First  Letter' && value.length > 1) {
       global.alert('Your search must have only 1 (one) character');
     }
     setSearchInput(value);
@@ -67,52 +26,106 @@ function SearchBar() {
       search: true,
       parameters: [searchType, searchInput],
     });
+    setLoading(true);
   };
 
   return (
     <form>
-      <input type="text" data-testid="search-input" onChange={ handleSearchInput } />
+      <TextField
+        margin="normal"
+        id="search"
+        name="search"
+        variant="standard"
+        label="Recipe"
+        autoFocus
+        size="small"
+        data-testid="search-input"
+        color="secondary"
+        sx={ { input: { color: 'white' }, color: 'white', mx: 1 } }
+        onChange={ handleSearchInput }
+      />
 
-      <label htmlFor="Ingredient">
-        <input
-          type="radio"
-          id="Ingredient"
+      <RadioGroup
+        name="searchType"
+        defaultValue="Name"
+        row
+        sx={ { mx: 3 } }
+      >
+        <FormControlLabel
+          value="Ingredient"
+          label="Ingredient"
           data-testid="ingredient-search-radio"
-          name="searchType"
-          onClick={ selectSearchType }
+          control={
+            <Radio
+              size="small"
+              color="secondary"
+              id="Ingredient"
+              onClick={ selectSearchType }
+              sx={ {
+                '& .MuiSvgIcon-root': {
+                  fontSize: 16,
+                },
+              } }
+            />
+          }
         />
-        Ingredient
-      </label>
 
-      <label htmlFor="Name">
-        <input
-          type="radio"
-          id="Name"
+        <FormControlLabel
+          value="Name"
+          label="Name"
           data-testid="name-search-radio"
-          name="searchType"
-          onClick={ selectSearchType }
+          control={
+            <Radio
+              size="small"
+              color="secondary"
+              id="Name"
+              onClick={ selectSearchType }
+              sx={ {
+                '& .MuiSvgIcon-root': {
+                  fontSize: 16,
+                },
+              } }
+            />
+          }
         />
-        Name
-      </label>
 
-      <label htmlFor="First Letter">
-        <input
-          type="radio"
-          id="First Letter"
+        <FormControlLabel
+          value="First Letter"
+          label="First Letter"
           data-testid="first-letter-search-radio"
-          name="searchType"
-          onClick={ selectSearchType }
+          control={
+            <Radio
+              size="small"
+              color="secondary"
+              id="First Letter"
+              onClick={ selectSearchType }
+              sx={ {
+                '& .MuiSvgIcon-root': {
+                  fontSize: 16,
+                },
+              } }
+            />
+          }
         />
-        First Letter
-      </label>
+      </RadioGroup>
 
-      <button
-        type="button"
+      <Button
+        variant="contained"
+        size="small"
+        color="secondary"
         data-testid="exec-search-btn"
         onClick={ () => handleSearchType() }
+        sx={ { color: 'white', mb: 2, mx: 5 } }
       >
         Search
-      </button>
+      </Button>
+
+      <Backdrop
+        sx={ { color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 } }
+        open={ loading }
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
     </form>
   );
