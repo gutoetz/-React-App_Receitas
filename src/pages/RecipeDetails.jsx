@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import withRoot from '../helper/withRoot';
 import MealRevenueDetail from '../components/MealRevenueDetail';
 import DrinkRevenueDetail from '../components/DrinkRevenueDetail';
 
@@ -18,4 +19,4 @@ RecipeDetails.propTypes = {
   type: PropTypes.string.isRequired,
 };
 
-export default RecipeDetails;
+export default withRoot(RecipeDetails);

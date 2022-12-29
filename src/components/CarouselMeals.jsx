@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 export default function CarouselMeals({ filteredMeals }) {
   return (
-    <Carousel>
+    <Carousel variant="dark">
       { filteredMeals.map((meal, index) => (
         <Carousel.Item key={ index }>
           <div data-testid={ `${index}-recommendation-card` }>

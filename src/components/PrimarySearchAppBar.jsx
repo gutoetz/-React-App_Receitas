@@ -18,7 +18,7 @@ export default function PrimarySearchAppBar({ title }) {
   // const arrayOfTitles = ['Done Recipes', 'Favorite Recipes', 'Profile'];
 
   const history = useHistory();
-
+  console.log(title);
   return (
     <AppBar position="static">
       <Toolbar sx={ { justifyContent: 'space-between' } }>
@@ -26,21 +26,27 @@ export default function PrimarySearchAppBar({ title }) {
           variant="h6"
           noWrap
           component="div"
+          color="white"
         >
           {document.title}
         </Typography>
-
-        <IconButton
-          size="large"
-          edge="end"
-          aria-label="account of current user"
-          color="inherit"
-        >
-          <SearchIcon
-            onClick={ () => setSearching(!searching) }
-            data-testid="search-top-btn"
-          />
-        </IconButton>
+        <Typography>{title}</Typography>
+        {(
+          title !== 'Done Recipes' && title !== 'Profile'
+         && title !== 'Favorite Recipes'
+        ) && (
+          <IconButton
+            size="large"
+            edge="end"
+            aria-label="account of current user"
+            color="inherit"
+          >
+            <SearchIcon
+              onClick={ () => setSearching(!searching) }
+              data-testid="search-top-btn"
+            />
+          </IconButton>
+        )}
 
         { searching && <SearchBar pageTitle={ title } /> }
 

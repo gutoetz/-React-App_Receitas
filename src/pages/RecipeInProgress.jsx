@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import shareIcon from '../images/shareIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
+import { CardMedia, Paper, Typography, Button, ButtonGroup } from '@mui/material';
+import ShareIcon from '@mui/icons-material/Share';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CheckboxList from '../components/CheckboxList';
 
 function RecipeInProgress() {
   // aux
@@ -134,76 +136,118 @@ function RecipeInProgress() {
   };
 
   return (
-    <div>
+    <Paper
+      sx={ {
+        mb: 0.5,
+        mx: 'auto',
+        maxWidth: 360,
+        textAlign: 'center',
+        p: 0.5,
+        opacity: 100,
+      } }
+    >
       { recipe.length >= 1 && (
         <section>
-          <h3 data-testid="recipe-title">{recipe[0][`str${acess}`]}</h3>
-          <img
-            src={ recipe[0][`str${acess}Thumb`] }
+          <Typography
+            component="h4"
+            variant="h4"
+            data-testid="recipe-title"
+          >
+            {recipe[0][`str${acess}`]}
+          </Typography>
+          <Typography
+            variant="h6"
+            data-testid="recipe-category"
+          >
+            {recipe[0].strCategory}
+
+          </Typography>
+          <CardMedia
+            component="img"
+            height="140"
+            image={ recipe[0][`str${acess}Thumb`] }
             alt="recipe-ph"
             data-testid="recipe-photo"
-            width="300px"
+            fullWidth
+            sx={ { my: 1 } }
           />
-          <button type="button" data-testid="share-btn" onClick={ copyToClipBoard }>
-            {copied ? (<p>Link copied!</p>) : (
-              <img
-                src={ shareIcon }
-                alt="share"
-              />
-            )}
-
-          </button>
-
-          {favorito ? (
-            <button
-              type="button"
+          <ButtonGroup
+            size="large"
+            orientation="horizontal"
+            aria-label="horizontal contained button group"
+            fullWidth
+            color="primary"
+            sx={ {
+              mt: 2,
+              maxWidth: 360,
+            } }
+          >
+            <Button
+              variant="contained"
+              data-testid="favorite-btn"
+              fullWidth
               onClick={ handleFavorite }
             >
-              <img src={ blackHeartIcon } alt="coração" data-testid="favorite-btn" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={ handleFavorite }
+              {favorito ? (
+                <FavoriteIcon alt="coração" />
+              ) : (
+                <FavoriteBorderOutlinedIcon alt="coração" />
+              )}
+            </Button>
+            <Button
+              variant="contained"
+              data-testid="share-btn"
+              fullWidth
+              onClick={ () => copyToClipBoard() }
             >
-              <img src={ whiteHeartIcon } alt="coração" data-testid="favorite-btn" />
-            </button>
-          )}
-
-          <h6 data-testid="recipe-category">{recipe[0].strCategory}</h6>
-          <p data-testid="instructions">{recipe[0].strInstructions}</p>
+              {copied ? ('Link copied!') : (
+                <ShareIcon alt="shareIcon" />
+              )}
+            </Button>
+          </ButtonGroup>
+          <Paper>
+            <CheckboxList
+              handleCheck={ handleCheck }
+              checkedList={ checkedList }
+              ingredient={ ingredient }
+            />
+          </Paper>
+          <Paper
+            elevation={ 1 }
+            sx={ {
+              p: 1,
+              my: 2.5,
+              textAlign: 'justify',
+            } }
+          >
+            <Typography
+              component="h5"
+              variant="h6"
+              data-testid="recipe-ticategorytle"
+              sx={ { mt: 1.5, mb: 1, textAlign: 'center' } }
+            >
+              Instructions
+            </Typography>
+            <Typography
+              variant="body1"
+              gutterBottom
+              data-testid="instructions"
+            >
+              {recipe[0].strInstructions}
+            </Typography>
+          </Paper>
         </section>
       )}
-      <div>
-        {ingredient.length > 0 && (
-          ingredient.map((e, i) => (
-            <label
-              key={ i }
-              data-testid={ `${i}-ingredient-step` }
-              htmlFor={ `checkbox${i}` }
-              className={ checkedList.includes(e[1])
-                ? 'checkedInput' : 'nonCheckedInput' }
-            >
-              {e[1]}
-              <input
-                type="checkbox"
-                id={ `checkbox${i}` }
-                checked={ !!checkedList.includes(e[1]) }
-                onChange={ () => handleCheck(e[1]) }
-              />
-            </label>
-          ))
-        )}
-      </div>
-      <button
-        type="button"
+      <Button
+        variant="contained"
         data-testid="finish-recipe-btn"
         disabled={ disabled }
         onClick={ handleFinish }
+        sx={ { mb: 2 } }
       >
         Finish Recipe
-      </button>
-    </div>
+      </Button>
+    </Paper>
   );
 }
 

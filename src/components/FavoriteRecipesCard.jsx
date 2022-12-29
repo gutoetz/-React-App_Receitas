@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { CardMedia, Link, ButtonGroup,
+  Typography, Button, CardActions, Card, CardContent } from '@mui/material';
+import ShareIcon from '@mui/icons-material/Share';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import GlobalContext from '../context/GlobalContext';
-import shareIcon from '../images/shareIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function FavoriteRecipesCard(infos) {
   const { favoriteRecipes, setFavoriteRecipes } = useContext(GlobalContext);
@@ -33,51 +34,83 @@ function FavoriteRecipesCard(infos) {
   };
 
   return (
-    <div>
-      <Link to={ `/${type}s/${id}` }>
-        <p data-testid={ `${index}-horizontal-name` }>{name}</p>
-      </Link>
-
-      <h6 data-testid={ `${index}-horizontal-top-text` }>{type}</h6>
-
-      <p data-testid={ `${index}-horizontal-top-text` }>
-        {`${nationality} - ${category}`}
-      </p>
-
-      { alcoholicOrNot && (
-        <p data-testid={ `${index}-horizontal-top-text` }>
-          {alcoholicOrNot}
-        </p>
-      ) }
-
-      <Link to={ `/${type}s/${id}` }>
-        <img
-          src={ image }
+    <Card sx={ { width: 355, my: 2, p: 2 } }>
+      <Link href={ `/${type}s/${id}` }>
+        <CardMedia
+          image={ image }
           alt="ReceiptImg"
           data-testid={ `${index}-horizontal-image` }
-          width="300px"
+          sx={ { height: 140 } }
         />
       </Link>
+      <CardContent>
+        <Link href={ `/${type}s/${id}` } underline="none">
+          <Typography
+            variant="h4"
+            data-testid={ `${index}-horizontal-name` }
+          >
+            {name}
 
-      <img
-        src={ blackHeartIcon }
-        alt="Favorite Button"
-        data-testid={ `${index}-horizontal-favorite-btn` }
-        onClick={ () => deleteFavorite(id) }
-        aria-hidden="true"
-      />
+          </Typography>
+        </Link>
 
-      <img
-        src={ shareIcon }
-        alt="Share Button"
-        data-testid={ `${index}-horizontal-share-btn` }
-        onClick={ () => copyToClipBoard() }
-        aria-hidden="true"
-      />
+        <Typography
+          variant="subtitle1"
+          data-testid={ `${index}-horizontal-top-text` }
+        >
+          {type}
 
-      {copied && <p>Link copied!</p>}
+        </Typography>
 
-    </div>
+        <Typography variant="h5" data-testid={ `${index}-horizontal-top-text` }>
+          {`${nationality} - ${category}`}
+        </Typography>
+
+        { alcoholicOrNot && (
+          <Typography data-testid={ `${index}-horizontal-top-text` }>
+            {alcoholicOrNot}
+          </Typography>
+        ) }
+
+      </CardContent>
+      <CardActions>
+        <ButtonGroup
+          size="large"
+          orientation="horizontal"
+          aria-label="horizontal contained button group"
+          fullWidth
+          color="primary"
+          sx={ {
+            mt: 0.5,
+            maxWidth: 360,
+          } }
+        >
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={ () => deleteFavorite(id) }
+          >
+            <FavoriteIcon
+              alt="Favorite Button"
+              data-testid={ `${index}-horizontal-favorite-btn` }
+            />
+          </Button>
+          <Button
+            fullWidth
+            onClick={ () => copyToClipBoard() }
+            data-testid={ `${index}-horizontal-share-btn` }
+            variant="contained"
+          >
+            {copied ? ('Link copied!') : (
+              <ShareIcon
+                alt="Share Button"
+
+              />
+            )}
+          </Button>
+        </ButtonGroup>
+      </CardActions>
+    </Card>
   );
 }
 

@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { Box, Button, ButtonGroup, CardMedia, Paper, Typography } from '@mui/material';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
 import useFetchIdDrinks from '../helper/useFetchIdDrinks';
 import useFetchRecommendMeals from '../helper/useFetchRecommendMeals';
-import shareIcon from '../images/shareIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import CarouselMeals from './CarouselMeals';
 
 const copy = require('clipboard-copy');
@@ -137,76 +140,165 @@ function DrinkRevenueDetail({ id }) {
   }
 
   return (
-    <div>
+    <Paper
+      sx={ {
+        mb: 0.5,
+        mx: 'auto',
+        maxWidth: 360,
+        textAlign: 'center',
+        p: 0.5,
+        opacity: 100,
+      } }
+    >
       { selectedRevenue && selectedRevenue.map((revenue) => (
-        <div key={ revenue.strDrink }>
-          <h3 data-testid="recipe-title">{revenue.strDrink}</h3>
+        <Box key={ revenue.strDrink } flexDirection="column" alignSelf="space-evenly">
+          <Typography component="h3" variant="h4" data-testid="recipe-title">
+            {revenue.strDrink}
+          </Typography>
 
-          <h4 data-testid="recipe-category">{revenue.strAlcoholic}</h4>
+          <Typography
+            data-testid="recipe-category"
+            component="h4"
+            variant="h6"
+          >
+            {revenue.strAlcoholic}
+          </Typography>
 
-          <img
-            src={ revenue.strDrinkThumb }
+          <CardMedia
+            component="img"
+            height="140"
+            image={ revenue.strDrinkThumb }
             alt="Selected Revenue"
             data-testid="recipe-photo"
-            width="150px"
+            fullWidth
+            sx={ { my: 1 } }
           />
-
-          <p data-testid="instructions">{revenue.strInstructions}</p>
-        </div>
+          <Paper
+            elevation={ 1 }
+            sx={ {
+              p: 1,
+              my: 2.5,
+              textAlign: 'justify',
+            } }
+          >
+            <Typography
+              variant="body1"
+              gutterBottom
+              data-testid="instructions"
+            >
+              {revenue.strInstructions}
+            </Typography>
+          </Paper>
+        </Box>
       )) }
-
-      <ul>
-        Ingredients:
-
-        { allIngredients && allIngredients.map((e, index) => (
-          <li key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
-            {e}
-          </li>
-        )) }
-      </ul>
+      <Paper
+        elevation={ 1 }
+        sx={ {
+          p: 1,
+          my: 2.5,
+          textAlign: 'center',
+        } }
+      >
+        {' '}
+        <Typography
+          component="h5"
+          variant="h6"
+          data-testid="recipe-ticategorytle"
+          sx={ { mt: 1.5, mb: 1 } }
+        >
+          Ingredients
+        </Typography>
+        <List
+          sx={ {
+            width: '100%',
+            maxWidth: 360,
+            bgcolor: 'background.paper',
+            position: 'relative',
+            overflow: 'auto',
+            maxHeight: 300,
+            '& ul': { padding: 0 },
+            mb: 3.5,
+          } }
+        >
+          { allIngredients && allIngredients.map((ingredient, index) => (
+            <ListItem
+              key={ index }
+              data-testid={ `${index}-ingredient-name-and-measure` }
+            >
+              <ListItemText primary={ ingredient } />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
 
       <div>
-        <h4>Recommended Meals</h4>
-
+        <Typography
+          component="h5"
+          variant="h6"
+          data-testid="recipe-ticategorytle"
+          sx={ { mt: 1.5, mb: 1 } }
+        >
+          Recommended Meals
+        </Typography>
         { filteredMeals && <CarouselMeals filteredMeals={ filteredMeals } /> }
       </div>
-
-      <button
-        data-testid="start-recipe-btn"
-        type="button"
-        onClick={ () => handleStartButton() }
-        className="recipeDetailsButton"
+      <ButtonGroup
+        size="large"
+        orientation="vertical"
+        aria-label="vertical contained button group"
+        fullWidth
+        color="primary"
+        sx={ {
+          mt: 2,
+          maxWidth: 360,
+        } }
       >
-        {startButton ? ('Start Recipe') : ('Continue Recipe')}
-      </button>
+        <Button
+          variant="contained"
+          data-testid="start-recipe-btn"
+          onClick={ () => handleStartButton() }
+          className="recipeDetailsButton"
+        >
+          {startButton ? ('Start Recipe') : ('Continue Recipe')}
+        </Button>
 
-      <div>
-        <button onClick={ shareRevenue } type="button" data-testid="share-btn">
-          <img src={ shareIcon } alt="shareIcon" />
-        </button>
-        {showCopied && <span>Link copied!</span>}
-      </div>
-
-      <div>
         { isFavorite === false ? (
-          <button onClick={ () => showFavorite() } type="button">
-            <img
-              src={ whiteHeartIcon }
+          <Button
+            variant="contained"
+            onClick={ () => showFavorite() }
+          >
+            <FavoriteBorderOutlinedIcon
               alt="White Heart Icon"
               data-testid="favorite-btn"
             />
-          </button>
+          </Button>
         ) : (
-          <button onClick={ () => showFavorite() } type="button">
-            <img
-              src={ blackHeartIcon }
+          <Button
+            onClick={ () => showFavorite() }
+            variant="contained"
+          >
+            <FavoriteIcon
               alt="Black Heart Icon"
               data-testid="favorite-btn"
             />
-          </button>
+          </Button>
         ) }
-      </div>
-    </div>
+
+        <Button
+          variant="contained"
+          data-testid="share-btn"
+          fullWidth
+          onClick={ () => shareRevenue() }
+        >
+          {showCopied ? (
+            'Link copied!'
+          ) : (
+            <ShareIcon alt="shareIcon" />
+          )}
+        </Button>
+
+      </ButtonGroup>
+    </Paper>
   );
 }
 

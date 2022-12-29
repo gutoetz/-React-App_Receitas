@@ -1,8 +1,10 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { Paper, Typography, Button, ButtonGroup } from '@mui/material';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MenuButton from '../components/MenuButton';
+import PrimarySearchAppBar from '../components/PrimarySearchAppBar';
 
 export default function Profile() {
   const history = useHistory();
@@ -18,32 +20,43 @@ export default function Profile() {
 
   return (
     <div>
-      <Header title="Profile" />
+      <PrimarySearchAppBar title="Profile" />
 
-      <p data-testid="profile-email">{ email }</p>
-
-      <menu className="profile-menu">
-        <MenuButton
-          type="button"
+      <ButtonGroup
+        sx={ { my: 2 } }
+        className="profile-menu"
+      >
+        <Button
           data-testid="profile-done-btn"
           onClick={ () => history.push('/done-recipes') }
-          textButton="Done Recipes"
-        />
+        >
+          Done Recipes
 
-        <MenuButton
-          type="button"
+        </Button>
+
+        <Button
           data-testid="profile-favorite-btn"
           onClick={ () => history.push('/favorite-recipes') }
-          textButton="Favorite Recipes"
-        />
+        >
+          Favorite Recipes
 
-        <MenuButton
-          type="button"
+        </Button>
+
+        <Button
           data-testid="profile-logout-btn"
           onClick={ logout }
-          textButton="Logout"
-        />
-      </menu>
+        >
+          Logout
+
+        </Button>
+      </ButtonGroup>
+      <Typography
+        variant="h5"
+        data-testid="profile-email"
+      >
+        { `Email: ${email}` }
+
+      </Typography>
 
       <Footer />
     </div>

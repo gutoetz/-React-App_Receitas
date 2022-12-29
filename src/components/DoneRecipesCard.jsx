@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import shareIcon from '../images/shareIcon.svg';
+import { CardMedia, Link,
+  Typography, Button, CardActions, Card, CardContent } from '@mui/material';
+import ShareIcon from '@mui/icons-material/Share';
 
 function DoneRecipesCard(infos) {
   const {
@@ -26,57 +27,68 @@ function DoneRecipesCard(infos) {
   };
 
   return (
-    <div>
-      <Link to={ `/${type}s/${id}` }>
-        <p data-testid={ `${index}-horizontal-name` }>{name}</p>
-      </Link>
-
-      <h6 data-testid={ `${index}-horizontal-top-text` }>{type}</h6>
-
-      <p data-testid={ `${index}-horizontal-top-text` }>
-        {`${nationality} - ${category}`}
-      </p>
-
-      <p data-testid={ `${index}-horizontal-done-date` }>
-        {doneDate}
-      </p>
-
-      { alcoholicOrNot && (
-        <p data-testid={ `${index}-horizontal-top-text` }>
-          {alcoholicOrNot}
-        </p>
-      ) }
-
-      <Link to={ `/${type}s/${id}` }>
-        <img
-          src={ image }
-          alt="ReceiptImg"
+    <Card sx={ { width: 355, my: 2, p: 2 } }>
+      <Link href={ `/${type}s/${id}` } underline="none">
+        <CardMedia
+          sx={ { height: 140 } }
+          image={ image }
+          title="ReceiptImg"
           data-testid={ `${index}-horizontal-image` }
-          width="300px"
         />
+
       </Link>
+      <CardContent>
+        <Link href={ `/${type}s/${id}` } underline="none">
+          <Typography
+            variant="h4"
+            data-testid={ `${index}-horizontal-name` }
+          >
+            {name}
+          </Typography>
+        </Link>
 
-      <img
-        src={ shareIcon }
-        alt="Share Button"
-        data-testid={ `${index}-horizontal-share-btn` }
-        onClick={ () => copyToClipBoard() }
-        aria-hidden="true"
-      />
+        <Typography
+          variant="subtitle1"
+          data-testid={ `${index}-horizontal-top-text` }
+        >
+          {type}
 
-      {copied && <p>Link copied!</p>}
+        </Typography>
 
-      <div>
+        <Typography variant="h5" data-testid={ `${index}-horizontal-top-text` }>
+          {`${nationality} - ${category}`}
+        </Typography>
+
+        { alcoholicOrNot && (
+          <Typography variant="h5" data-testid={ `${index}-horizontal-top-text` }>
+            {alcoholicOrNot}
+          </Typography>
+        ) }
         { tags && tags.map((tagName) => (
-          <p
+          <Typography
+            variant="h5"
             key={ tagName }
             data-testid={ `${index}-${tagName}-horizontal-tag` }
           >
             {tagName}
-          </p>
+          </Typography>
         )) }
-      </div>
-    </div>
+        <Typography variant="subtitle2" data-testid={ `${index}-horizontal-done-date` }>
+          {doneDate}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button fullWidth variant="contained">
+          {copied ? ('Link copied!') : (
+            <ShareIcon
+              alt="Share Button"
+              data-testid={ `${index}-horizontal-share-btn` }
+              onClick={ () => copyToClipBoard() }
+            />
+          )}
+        </Button>
+      </CardActions>
+    </Card>
 
   );
 }

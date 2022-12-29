@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Header from '../components/Header';
-
+import { Paper, Button, ButtonGroup } from '@mui/material';
 import FavoriteRecipesCard from '../components/FavoriteRecipesCard';
 import GlobalContext from '../context/GlobalContext';
-import MenuButton from '../components/MenuButton';
+import PrimarySearchAppBar from '../components/PrimarySearchAppBar';
 
 export default function FavoriteRecipes() {
   // States
@@ -28,29 +27,55 @@ export default function FavoriteRecipes() {
   };
 
   return (
-    <div>
-      <Header title="Favorite Recipes" />
-      <menu>
-        <MenuButton
+    <Paper
+      sx={ {
+        mb: 0.5,
+        mx: 'auto',
+        maxWidth: 360,
+        textAlign: 'center',
+        opacity: 100,
+      } }
+    >
+      <PrimarySearchAppBar title="Favorite Recipes" />
+      <ButtonGroup
+        size="large"
+        orientation="horizontal"
+        aria-label="horizontal contained button group"
+        fullWidth
+        color="primary"
+        sx={ {
+          mt: 2,
+          maxWidth: 360,
+        } }
+      >
+        <Button
           id="filter-by-all-btn"
           value="all"
           onClick={ handleFilter }
           textButton="All"
-        />
-
-        <MenuButton
+        >
+          All
+        </Button>
+        <Button
           id="filter-by-meal-btn"
           value="meal"
           onClick={ handleFilter }
           textButton="Meals"
-        />
-        <MenuButton
+        >
+          Meals
+
+        </Button>
+
+        <Button
           id="filter-by-drink-btn"
           value="drink"
           onClick={ handleFilter }
           textButton="Drinks"
-        />
-      </menu>
+        >
+          Drinks
+
+        </Button>
+      </ButtonGroup>
 
       <div data-testid="favorite-recipes-container">
         { favoriteRecipes && favoriteRecipes.map((recipes, index) => (
@@ -61,6 +86,6 @@ export default function FavoriteRecipes() {
           />
         )) }
       </div>
-    </div>
+    </Paper>
   );
 }

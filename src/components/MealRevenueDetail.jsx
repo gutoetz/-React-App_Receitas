@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Box, Button, ButtonGroup, CardMedia, Paper, Typography } from '@mui/material';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
 import useFetchIDMeals from '../helper/useFetchIDMeals';
 import useFetchRecommendDrinks from '../helper/useFetchRecommendDrinks';
-import shareIcon from '../images/shareIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import CarouselDrinks from './CarouselDrinks';
 
 const copy = require('clipboard-copy');
@@ -157,17 +160,16 @@ function MealRevenueDetail({ id }) {
         maxWidth: 360,
         textAlign: 'center',
         p: 0.5,
-        backgroundColor: '#870000',
         opacity: 100,
       } }
     >
       { selectedRevenue && selectedRevenue.map((revenue) => (
         <Box key={ revenue.strMeal } flexDirection="column" alignSelf="space-evenly">
-          <Typography component="h3" variant="h3" data-testid="recipe-title">
+          <Typography component="h3" variant="h4" data-testid="recipe-title">
             {revenue.strMeal}
           </Typography>
 
-          <Typography component="h4" variant="h4" data-testid="recipe-ticategorytle">
+          <Typography component="h4" variant="h6" data-testid="recipe-ticategorytle">
             {revenue.strCategory}
           </Typography>
 
@@ -182,18 +184,16 @@ function MealRevenueDetail({ id }) {
           />
 
           <Paper
-            elevation={ 24 }
-            variant="outlined"
-            sx={ { mx: 1,
-              px: 0.5,
-              my: 2,
+            elevation={ 1 }
+            sx={ {
+              p: 1,
+              my: 2.5,
               textAlign: 'justify',
-              backgroundColor: '#fbe9e7',
             } }
           >
             <Typography
               component="h5"
-              variant="h5"
+              variant="h6"
               data-testid="recipe-ticategorytle"
               sx={ { mt: 1.5, mb: 1, textAlign: 'center' } }
             >
@@ -213,6 +213,7 @@ function MealRevenueDetail({ id }) {
             <iframe
               src={ embedURL }
               title="YouTube video player"
+              width="95%"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write;
                 encrypted-media; yroscope; picture-in-picture"
@@ -222,28 +223,50 @@ function MealRevenueDetail({ id }) {
           ) }
         </Box>
       )) }
-
-      <ul style={ { listStyleType: 'none' } }>
+      <Paper
+        elevation={ 1 }
+        sx={ {
+          p: 1,
+          my: 2.5,
+          textAlign: 'center',
+        } }
+      >
+        {' '}
         <Typography
           component="h5"
-          variant="h5"
+          variant="h6"
           data-testid="recipe-ticategorytle"
           sx={ { mt: 1.5, mb: 1 } }
         >
           Ingredients
         </Typography>
-
-        { allIngredients && allIngredients.map((e, index) => (
-          <li key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
-            {e}
-          </li>
-        )) }
-      </ul>
+        <List
+          sx={ {
+            width: '100%',
+            maxWidth: 360,
+            bgcolor: 'background.paper',
+            position: 'relative',
+            overflow: 'auto',
+            maxHeight: 300,
+            '& ul': { padding: 0 },
+            mb: 3.5,
+          } }
+        >
+          { allIngredients && allIngredients.map((ingredient, index) => (
+            <ListItem
+              key={ index }
+              data-testid={ `${index}-ingredient-name-and-measure` }
+            >
+              <ListItemText primary={ ingredient } />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
 
       <div>
         <Typography
           component="h5"
-          variant="h5"
+          variant="h6"
           data-testid="recipe-ticategorytle"
           sx={ { mt: 1.5, mb: 1 } }
         >
@@ -258,7 +281,7 @@ function MealRevenueDetail({ id }) {
         orientation="vertical"
         aria-label="vertical contained button group"
         fullWidth
-        color="secondary"
+        color="primary"
         sx={ {
           mt: 2,
           maxWidth: 360,
@@ -278,8 +301,7 @@ function MealRevenueDetail({ id }) {
             variant="contained"
             onClick={ () => showFavorite() }
           >
-            <img
-              src={ whiteHeartIcon }
+            <FavoriteBorderOutlinedIcon
               alt="White Heart Icon"
               data-testid="favorite-btn"
             />
@@ -289,23 +311,26 @@ function MealRevenueDetail({ id }) {
             onClick={ () => showFavorite() }
             variant="contained"
           >
-            <img
-              src={ blackHeartIcon }
+            <FavoriteIcon
               alt="Black Heart Icon"
               data-testid="favorite-btn"
             />
           </Button>
         ) }
+
         <Button
           variant="contained"
           data-testid="share-btn"
           fullWidth
           onClick={ () => shareRevenue() }
         >
-          <img src={ shareIcon } alt="shareIcon" />
+          {showCopied ? (
+            'Link copied!'
+          ) : (
+            <ShareIcon alt="shareIcon" />
+          )}
         </Button>
 
-        {showCopied && <span>Link copied!</span>}
       </ButtonGroup>
     </Paper>
   );
